@@ -15,11 +15,11 @@ export default {
   props: {
     todo: {
       type: Object,
-      required: true,
+      required: true
     }
   },
   methods: {
-    deleteTodo() {
+    deleteTodo () {
       this.$emit('del', this.todo.id)
     }
   }
@@ -65,10 +65,10 @@ export default {
   appearance: none;
   outline none
   &:after{
-    content url('../assets/images/round.svg')
+    content url('../../assets/images/round.svg')
   }
   &:checked:after{
-    content url('../assets/images/done.svg')
+    content url('../../assets/images/done.svg')
   }
 }
 .destory{
