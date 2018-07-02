@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>锅打灰太狼</title>
+	<meta id="viewport" name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no">
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		#box>*{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+		}
+		#app{
+			background-image: url('img/game_bg.jpg');
+			background-size: cover;
+		}
+		.contain{
+			background-color: rgba(0,0,0,.3);
+		}
+		.contain>*{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+			border: 10px solid yellowgreen;
+			border-radius: 5px;
+			box-sizing: border-box;
+			width: 300px;
+			height: 350px;
+			background-color: rgb(189,211,78);
+		}
+
+		.header{
+			height: 20%;
+			line-height: 50px;
+			text-align: center;
+			color: white;
+			font-weight: 20px;
+			background-color: gold;
+		}
+		.content{
+			background-color: orange;
+			height: 60%;
+			margin: 5% 0;
+		}
+		.footer{
+			height: 10%;
+			text-align: center;
+		}
+		.footer>button{
+			border-radius: 10px;
+			display: inline-block;
+			width: 100px;
+			height: 30px;
+			line-height: 30px;
+			text-align: center;
+			color: white;
+			background-color: cyan;
+		}
+		
+		.score{
+			position: absolute;
+			font-weight: 25px;
+			color: white;
+			/* top: 50%;
+			left: 50%;
+			transform: translate(-153%,-1079%); */
+			z-index: 1000;
+		}
+	</style>
+</head>
+<body>
+<div id="box">
+	<canvas id="app" width="320" height="480" style="border:1px solid gray;"></canvas>
+	
+	<div class="contain" style="display:none;">
+		<div class="popover-start">
+			<div class="header">磊哥猛日狼</div>
+			<ul class="content">
+				<p>敬爱的磊黑村长：</p>
+				<p style="text-indent:2cm;">灰太狼大军大举进攻我羊村，此成危急存亡之秋，好在村长大人与红太狼有一腿，凭借那夜偷来的芭蕉扇...啊不，平底锅方可降服灰太狼。锅上无眼，还袁村长切勿伤及大军中混入的小灰灰。毕竟，那可能是村长你的亲骨肉...</p>
+			</ul>
+			<div class="footer">
+				<button class="start">开始</button>
+			</div>
+		</div>
+		<!-- 结束 -->
+		<div class="popover-end" style="display:none">
+			<div class="header">玩家排行</div>
+			<ul class="content">
+				懒得写排名了，凑合着玩吧
+			</ul>
+			<div class="footer">
+				<button class="resh">重来</button>
+			</div>
+		</div>
+	</div>
+	
+</div>
+<p class="score">0</p>
+	
+</body>
+<script>
+var canvas = document.getElementById('app');
+var ctx = canvas.getContext('2d');
+var windowWidth = window.innerWidth;
+var windowHeight = window.innerHeight;
+if(windowWidth<=425){
+	canvas.width = windowWidth;
+	canvas.height = windowWidth*480/320;
+}
+var cw = canvas.width , ch = canvas.height;
+
+var contain = document.querySelector('.contain');
+var start = document.querySelector('.start');
+var resh = document.querySelector('.resh');
+var scores = document.querySelector('.score');
+var postart = document.querySelector('.popover-start');
+var poend = document.querySelector('.popover-end');
+contain.style.width = cw + 'px';
+contain.style.height = ch + 'px';
+
+var jh = canvas.offsetTop - ch/2;
+var jw = canvas.offsetLeft - cw/2;
+scores.style.top = (19*480/ch + jh)+'px';
+scores.style.left = (90*320/cw + jw)+'px';
+
+var timer = null;
+
+var wolfArr = [];
+var imgArr = [];
+
+var level = 1;
+var count = 0;
+var score = 0;
+var times = 180;
+
+var imgObj = {
+	wolf:'img/h.png',
+	hWolf:'img/x.png',
+	progress:'img/progress.png'
+}
+
+//预加载图片
+function preload(){
+	var _count = 0,
+		_i = 0,
+		_sum = 0;
+	for(c in imgObj){
+		_count++;
+	}
+	for(x in imgObj){
+		imgArr[_i] = new Image();
+		imgArr[_i].onload = function(){
+			_sum++;
+			if(_sum >= _count){
+				contain.style.display = "block";
+				console.log("加载完成")
+			}
+		}
+		imgArr[_i].src = imgObj[x];
+		_i++;
+	}
+}
+preload();
+
+//灰太狼构造器
+function Wolf(x,y,id){
+	this.dea = false;
+	this.name = "big";
+	this.x = x;
+	this.y = y;
+	this.id = id;
+	this.idx = -1;
+	this.wx = 108/320*cw;
+	this.hy = 101/480*ch;
+	this.img = imgArr[0];
+	this.dir = true;
+	this.lif = true;
+	
+	this.life = function(){
+		if(this.dir){
+			this.idx++;
+			if(this.lif){
+				this.dir = this.idx >= 5 ? false : true;
+			}
+		}else{
+			this.idx--;
+			this.dea = this.idx < 0 ? true : false;
+		}
+		ctx.drawImage(this.img,108*this.idx,0,108,101,x,y,108/320*cw,101/480*ch);
+	},
+	this.death = function(){
+		this.lif = false;
+		this.dea = true;
+		this.dir = true;
+		this.idx = 6;
+	}
+}
+
+//小灰灰构造器
+function sWolf(x,y,id){
+	this.name = "small";
+	this.x = x;
+	this.y = y;
+	this.id = id;
+	this.idx = -1;
+	this.wx = 108/320*cw;
+	this.hy = 101/480*ch;
+	this.img = imgArr[1];
+	this.dir = true;
+	this.lif = true;
+	this.dea = false;
+	this.life = function(){
+		if(this.dir){
+			this.idx++;
+			if(this.lif){
+				this.dir = this.idx >= 5 ? false : true;
+			}else{
+				this.dea = this.idx > 9 ? true : false;
+			}
+		}else{
+			this.idx--;
+			this.dea = this.idx < 0 ? true : false;
+		}
+		ctx.drawImage(this.img,108*this.idx,0,108,101,x,y,108/320*cw,101/480*ch);
+	},
+	this.death = function(){
+		this.lif = false;
+		this.dir = true;
+		this.dea = true;
+		this.idx = 6;
+	}
+}
+
+
+//地图
+var map = [
+		{"id":0,"left":98/320*cw,"top":115/480*ch},
+		{"id":1,"left":17/320*cw,"top":160/480*ch},
+		{"id":2,"left":17/320*cw,"top":221/480*ch},
+		{"id":3,"left":31/320*cw,"top":294/480*ch},
+		{"id":4,"left":103/320*cw,"top":192/480*ch},
+		{"id":5,"left":188/320*cw,"top":142/480*ch},
+		{"id":6,"left":200/320*cw,"top":212/480*ch},
+		{"id":7,"left":121/320*cw,"top":274/480*ch},
+		{"id":8,"left":208/320*cw,"top":296/480*ch}
+	];
+
+//随机函数
+function ranDom(min,max){
+	return Math.round(Math.random()*(max - min)+min);
+}
+
+//产生狼
+function createWolf(){
+	if(wolfArr.length < 8){
+		var only = false;
+		while(!only){
+			var _position = map[ranDom(0,8)],
+				_left = _position.left,
+				_top = _position.top,
+				_id = _position.id;
+			var _wolf = null;
+			var notOnly = false;
+			ranDom(1,10) > 3 ? _wolf = new Wolf(_left,_top,_id) : _wolf = new sWolf(_left,_top,_id);
+
+			if(wolfArr.length != 0){
+				wolfArr.forEach(function(item){
+					if(item.id == _wolf.id){
+						notOnly = true;
+					}
+				})
+			}
+
+			if (!notOnly) {
+				only = true;
+			}
+		}
+		wolfArr.push(_wolf);
+	}	
+}
+
+//打中校验
+function checkFight(_this,x,y){
+	var _bool = _this.x < x && x < (_this.x+_this.wx) && _this.y < y && y < (_this.y+_this.hy);
+	return _bool;
+}
+
+//清除狼
+function clearWolf(){
+	if(wolfArr.length > 0){
+		wolfArr = wolfArr.filter(function(item){
+			return !(item.idx > 9 || item.idx < -2)//-1问题所在，上来就被清除了
+		})
+	}
+}
+
+canvas.onclick = function(event){
+	var e = event || window.event;
+	var _x = e.offsetX;
+	var _y = e.offsetY;
+	// console.log(e.offsetX,e.offsetY)
+	
+
+	if (wolfArr.length > 0) {
+		wolfArr.forEach(function(item){
+			if(checkFight(item,_x,_y)){
+				if(!item.dea){
+					var increment = 0;
+					item.idx < 2 && item.dir == true ? increment = 20 : increment = 10 ;
+					// item.idx < 3 && item.dir == true ? console.log("瞬杀？") : console.log('平A');
+					item.name == "big" ? score += increment : score -= increment;
+					item.death();
+					scores.innerText = score;
+				}
+				
+			}
+		})
+	}
+	
+}
+
+//主函数
+function main(){
+	    timer = setInterval(function(){
+		ctx.clearRect(0,0,canvas.width,canvas.height);
+		ctx.drawImage(imgArr[2],0,0,180,16,63/320*cw,66/480*ch,times/320*cw,16/480*ch)
+		count++;
+		if(count % 8 == 0){
+			createWolf();
+			times--;
+		}
+		clearWolf();
+
+		if (wolfArr.length > 0) {
+			wolfArr.forEach(function(item){
+				item.life();
+			})
+		}
+		if(times <= 0){
+			gameOver()
+		}
+	},60)
+	    
+}
+
+function start(){
+	score = 0;
+}
+
+function gameOver(){
+	clearInterval(timer);
+	postart.style.display = "none";
+	poend.style.display = "block";
+	contain.style.display = "block";
+	count = 0;
+	timer = 180;
+}
+
+start.onclick = function(){
+	contain.style.display = "none";
+	main();
+}
+
+resh.onclick = function(){
+	window.location = window.location;
+	contain.style.display = "none";
+}
+
+function cause(){
+	clearInterval(timer)
+}
+</script>
+</html>

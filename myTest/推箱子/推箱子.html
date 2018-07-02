@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>推箱子</title>
+	<style>
+		.wrap{
+			position: relative;
+			width: 100%;
+		}
+		#canvas{
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+		.side{
+			position: absolute;
+			width: 100px;
+			height: 500px;
+			opacity: .5;
+			background-color: black;
+		}
+		.side>*{
+			opacity: 0;
+			transition:opacity 2s;
+		}
+		.side>*:hover{
+			opacity: 1;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<canvas id="canvas" width="560" height="560"></canvas>
+		<div class="sides">
+			<button class="resh">重玩本关</button></br>
+			<button class="next">下一关</button></br>
+			<button class="last">上一关</button></br>
+			<label for="">
+				选择关卡：<input class="inp" type="text">
+			</label>
+		</div>
+	</div>
+</body>
+<script src="js/mapdata100.js"></script>
+<script>
+var canvas = document.getElementById("canvas");
+var cxt = canvas.getContext("2d");
+var resh = document.querySelector(".resh");
+var next = document.querySelector(".next");
+var last = document.querySelector(".last");
+var inp = document.querySelector(".inp");
+// var w=512/16,h=w;
+var w=35,h=35;//图片宽高
+var thisArr = [];//每一关操作的游戏数据数组
+var mapArr = [];//每一关原本的地图数据
+var level = 0;//关卡等级
+var human = {};//人物图片变量
+var lastArr = [];//上一步
+//包含全部需渲染的游戏图片对象
+var imgSum = {
+	"block" : "images/block.gif",
+	"wall" : "images/wall.png",
+	"box" : "images/box.png",
+	"ball" : "images/ball.png",
+	"up" : "images/up.png",
+	"down" : "images/down.png",
+	"left" : "images/left.png",
+	"right" : "images/right.png"
+}
+
+//预加载图片，当全部加载完成回调初始化
+function preLoad(img,callback){
+	var sum = 0,num = 0,saveImg = {};
+	for(x in img){
+		sum++;//求出需加载图片的总数
+	}
+	for(src in img){
+		saveImg[src] = new Image();
+		saveImg[src].src = img[src];
+		saveImg[src].onload = function(){
+			if(++num >= sum){
+				callback(saveImg)
+			}
+		}
+	}
+}
+//将图片对象定义到全局变量，方便各个函数对其操作
+var block,wall,box,ball,up,down,left,right;
+preLoad(imgSum,function(saveImg){
+	block = saveImg.block;
+	wall = saveImg.wall;
+	box = saveImg.box;
+	ball = saveImg.ball;
+	up = saveImg.up;
+	down = saveImg.down;
+	left = saveImg.left;
+	right = saveImg.right;
+	init();
+})
+//总初始化
+function init(){
+	initLevel();
+	// showMoveInfo();
+}
+//具体关卡的初始化
+function initLevel(){
+	thisArr = copy(levels[level]);//复制某关卡数组，本关内操作此数据，与原地图数据作对比，当所有箱子与陷进重叠则过关；
+	mapArr = levels[level];//本关原地图
+	human = down;//人物初始状态
+	BgMap();
+	DrawMap();
+}
+
+//画地板
+function BgMap(){
+	cxt.clearRect(0,0,canvas.width,canvas.height);
+	for(var i=0;i<levels[0].length;i++){
+		for(var j=0;j<levels[0][i].length;j++){
+			cxt.drawImage(block,w*j,h*i,w,h)
+		}
+	}
+}
+
+//复制原地图数组，返回新的数组用来操作，渲染游戏数据
+function copy(arrS){
+	var copyArray = [];
+	for(var i=0;i<arrS.length;i++){
+		copyArray[i] = arrS[i].concat();
+	}
+	return copyArray;
+}
+
+//人物的位置
+var humanPoint = new Point(0,0);
+
+//画不同关卡游戏场景
+function DrawMap(){
+	for(var i=0;i<thisArr.length;i++){
+		for(var j=0;j<thisArr[i].length;j++){
+			var Imgs = block;
+			switch(thisArr[i][j]){
+				case 1:
+					Imgs = wall;
+					break;
+				case 2:
+					Imgs = ball;
+					break;
+				case 3:
+					Imgs = box;
+					break;
+				case 4:
+					Imgs = human;
+					humanPoint.x = i;
+					humanPoint.y = j;
+					break;
+				case 5:
+					Imgs = box;
+					break;
+				default:break;
+			}
+			cxt.drawImage(Imgs,w*j-(Imgs.width-w)/2,h*i-(Imgs.height)/2,Imgs.width,Imgs.height);
+		}
+	}
+}
+
+//页面被按下按键获取按键的值
+document.onkeydown = function(event){
+	var code = event.keyCode;
+	console.log(code);
+	switch(code){
+		case 37:go("left");
+			break;
+		case 38:go("up");
+			break;
+		case 39:go("right");
+			break;
+		case 40:go("down");
+			break;
+		default:break;
+	}
+}
+
+
+//运动方向函数
+function go(whats){
+	switch(whats){
+		case "left":
+			human = left;
+			p1 = new Point(humanPoint.x,humanPoint.y-1);
+			p2 = new Point(humanPoint.x,humanPoint.y-2);
+			break;
+		case "right":
+			human = right;
+			p1 = new Point(humanPoint.x,humanPoint.y+1);
+			p2 = new Point(humanPoint.x,humanPoint.y+2);
+			break;
+		case "up":
+			human = up;
+			p1 = new Point(humanPoint.x-1,humanPoint.y);
+			p2 = new Point(humanPoint.x-2,humanPoint.y);
+			break;
+		case "down":
+			human = down;
+			p1 = new Point(humanPoint.x+1,humanPoint.y);
+			p2 = new Point(humanPoint.x+2,humanPoint.y);
+			break;
+		default:break;
+
+	}
+	if(canMove(p1,p2)){
+		BgMap();
+		DrawMap();
+	}
+	
+	if(check()){
+		goNext()
+		alert("过了，666")
+	}
+	
+}
+
+//存储一个单位的x,y位置的类
+function Point(x,y){
+	this.x = x,
+	this.y = y
+}
+
+//判断小人是否可以移动的函数
+function canMove(p1,p2){
+	if(p1.x<0||p1.y<0) return false;//超出地图边界返回false
+	if(p1.x>thisArr[0].length||p1.y>thisArr.length) return false;//同上
+	if(thisArr[p1.x][p1.y] == 1) return false;//前面是墙，返回false
+	if(thisArr[p1.x][p1.y] == 3||thisArr[p1.x][p1.y]==5){//前面是箱子或放入陷进的箱子要判断再往前一格是什么
+		if(thisArr[p2.x][p2.y]==1||thisArr[p2.x][p2.y]==3||thisArr[p2.x][p2.y]==5){//前面的前面是墙，箱子直接返回
+			return false;
+		}
+		lastArr = copy(thisArr);
+		if(thisArr[p2.x][p2.y]==2)
+			thisArr[p2.x][p2.y] = 5;//落入陷进的箱子是类型5
+		else
+			thisArr[p2.x][p2.y] = 3;
+		//
+	}
+	
+	thisArr[p1.x][p1.y] = 4;
+	if(mapArr[humanPoint.x][humanPoint.y] == 0 || mapArr[humanPoint.x][humanPoint.y] == 2){//原位置是小人则现在为地板
+		thisArr[humanPoint.x][humanPoint.y] = mapArr[humanPoint.x][humanPoint.y];
+	}else if(mapArr[humanPoint.x][humanPoint.y] == 5){
+		thisArr[humanPoint.x][humanPoint.y] = 2;
+	}else{
+		thisArr[humanPoint.x][humanPoint.y] = 0;
+	}
+	
+	return true;
+}
+//校验是否已通关函数（全部的箱子放入陷阱）
+function check(){
+	for(var i=0;i<thisArr.length;i++){
+		for(var j=0;j<thisArr[i].length;j++){
+			if(thisArr[i][j]==3){
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+//下一关
+function goNext(){
+	level++;
+	initLevel()
+}
+</script>
+</html>
