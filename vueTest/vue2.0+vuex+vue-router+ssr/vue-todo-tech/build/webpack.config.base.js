@@ -28,9 +28,9 @@ const config = {
         loader: 'babel-loader'
       },
       {
-        test:/\.js$/,
-        loader:'babel-loader',
-        exclude:/node-modules/
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node-modules/
       },
       {
         test: /\.(gif|jpg|jpeg|png|svg)$/,

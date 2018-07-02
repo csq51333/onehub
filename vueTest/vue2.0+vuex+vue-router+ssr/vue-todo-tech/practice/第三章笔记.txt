@@ -1,0 +1,89 @@
+2018年6月27日，10:03:24
+node_modules
+vue/dist、vue提供了多种不同环境下运行模式
+默认vue.rutime.xxx.js
+开发环境中默认：vue.runtime.esm.js
+正式环境中默认：vue.runtime.min.js
+
+有runtime与无runtime区别
+含有runtime不能写template：“字符”
+
+new Vue中的属性template最终会被vue编译成一个render（），函数返回编译在html中的内容
+使用webpack,写el指定挂载，挂载的过程会直接把节点替换，所以包一层
+
+vm.$options就是传入new Vue里的对象
+$options.render()函数会渲染，但会等到有其他数据变化后才会渲染出来
+
+vue是响应式的，初始化未在data中声明的数据，如data{obj:{}},obj是空对象
+后来在别处声明的obj.a是非响应式的，它的值变化也并不会被重新渲染
+$forceUpdate()方法可以强制渲染，更好的方法是：
+vm.$set(app.obj,'a' ,会变化的值)
+vm.$delete
+
+vue内部调用的this是这个vm实例：this.$data == vm.$data
+
+.vue里没用template的属性，vue-loader处理直接变成render 函数
+这样做的好处是，template解析成render中间很耗时，直接效率高
+
+vue默认白名单访问不了全局变量，js默认全局对象可以如new Date
+防止注入类型的网页攻击，data属性的html片段都被转成字符，可用v-html绑定
+
+2018年6月27日，1：25：00
+
+computed 是定义一个类时 get方法，Object.defindpropotype{get}
+设置的get方法，vue处理过的computed的方法是有缓存的
+
+data数据变化时，定义在methods里的方法会重新计算，computed只要它依赖的数据未变化就不会
+使用computed计算性能开销较小，
+
+computed也可以做设置的操作name :{get(){},set(name){}}
+
+watch第一遍不执行，等到监听的数据改变时才会，watch不适合用于显示，computed适合
+watch适用于，如：监听到某个数字变化后进行一系列操作，如发送请求，回调等等。computed做不到
+watch 最后时用handle（newval,oldval）{}运算
+watch { immediate:true 上来先运行一边，deep：true，一个obj中的属性变化时，是不会触发watch的只有赋值可以，deep：true深观察就可以了}
+以上性能消耗较大，最好的方式是 ‘obj.a’加冒号就可以单独监听对象中的某一个属性
+
+template必须以一个单一节点为根节点，多个会报错
+
+v-for 指定唯一 v-bind:key="" 可以在之后需要再次渲染前从缓存中拿到同样的key
+则会复用之前渲染的节点，而不需要重选生成dom节点
+v-on：如果是dom节点使用addEventLinsener监听事件，如果是组件用$on?
+
+vue如果需要data初始化数据，这个data不是写在new Vue中的，需要写成data(){retrun}
+
+2018年6月28日，02：21：00
+
+data(){return obj}如果obj是全局变量，这个组件写两个会内容联动
+所以data(){return {...}}，此时每个组件的data才独属于这个组件的作用域
+
+子组件不使用v-bind绑定需要给props的属性，也可以传递，不过传的就是字符串，v-bind解析在vue.data中定义的属性？
+
+props跟data一样挂载到this，修改props虽然成功但是会抛出wran，组件的显示因由外部约束
+props有两种：['xxx','xx']和对象描述形式两种
+
+props.deafault.vailted
+componentConfig1 = {extends:componentConfig}
+
+在new Vue({name:xx}) 中自定义的属性用this.name检索不到，用$option.name
+组件中this.$parent.$option.name
+可以在子组件中直接通过this.$parent.name调用父组件的内容
+子组件始终关联调用它的父级，多个?
+
+new Vue 时可以声明parent，才能改变内部的子组件parent的指向
+
+
+2018年6月29日，03:00:20
+
+slot-scope，获取在组建中这个插槽上绑定的属性
+组件中：<slot name="cha" aa="xx" :value="value">
+父级中<div slot="cha" slot-scope="obj">{{obj.aa}}</div>
+
+data:{}与data(){return}区别？provide：提供爷爷级信息要用proviede(){return},子级上inject数组接受（暂时）
+
+render函数创建的是vnode类，在内存中存储，类似DOM结构，会跟真DOM进行对比，如果有更新，填入到DOM中
+render slot时，第三个参数，this.$slots.default,如果含有name，
+<slot name="head"></slot> 在render中：this.$slots.head
+在父级的render中的nativeOn可以把事件直接绑定在组件根节点上，让子组件触发父级中的事件
+domProps设置在render第二个参数，属性对象里。domProps可以设置js原生node属性如：innerHTML
+attrs同上，设置id，class等，区别？
