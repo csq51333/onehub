@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<p id="div1">理解new运算过程</p>
+</body>
+<script>
+function Person( name ){
+	this.name = name;
+}; 
+ 
+Person.prototype.getName = function(){
+	return this.name;
+}; 
+
+var objectFactory = function(){
+	var obj = new Object(), // 从 Object.prototype 上克隆一个空的对象
+		Constructor = [].shift.call( arguments ); // 取得外部传入的构造器，此例是 Person
+
+	obj.__proto__ = Constructor.prototype; // 指向正确的原型
+	var ret = Constructor.apply( obj, arguments ); // 借用外部传入的构造器给 obj 设置属性
+
+    return typeof ret === 'object' ? ret : obj; // 确保构造器总是会返回一个对象 
+}; 
+
+var a = objectFactory( Person, 'sven' ); 
+ 
+console.log( a.name ); // 输出：sven
+console.log( a.getName() ); // 输出：sven
+console.log( Object.getPrototypeOf( a ) === Person.prototype ); // 输出：true
+
+// var a = objectFactory( A, 'sven' );
+// var a = new A( 'sven' );
+
+ 
+ 
+document.getElementById = (function( func ){
+	return function(){
+		return func.apply( document, arguments );
+	}
+})( document.getElementById ); 
+ 
+var getId = document.getElementById;
+var div = getId( 'div1' );
+
+// var div = document.getElementById('div1');
+console.log( div.id );    // 输出： div1
+
+var ooo = {}
+function n(){
+	this.name=name;
+	this.age="18";
+	this.arg = [];
+	// 如果直接传递this.arg=arguments
+	// arg是一个参数类数组，无法做数组操作，如：ooo.arg.pop()
+	this.arg[0] = arguments[0]
+	this.arg[1] = arguments[1]
+	this.arg[2] = arguments[2]
+	this.arg[3] = arguments[3]
+}
+n.apply(ooo,["name",111,99,function(){return 1}])
+console.log(ooo)
+</script>
+</html>
