@@ -2,7 +2,13 @@
   <div id="app">
     <div id="cover"></div>
     <Header></Header>
-    <todo></todo>
+    <router-link to="/app/112">app</router-link>
+    <router-link to="/login">login</router-link>
+    <router-link to="/login/exact">login exact</router-link>
+    <!-- <todo></todo> -->
+    <transition name="fade">
+      <router-view />
+    </transition>
     <Footer></Footer>
   </div>
 </template>

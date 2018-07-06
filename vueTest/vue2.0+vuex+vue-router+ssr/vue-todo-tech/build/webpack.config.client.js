@@ -13,6 +13,9 @@ const devServer = {
   overlay: {
     errors: true
   },
+  historyApiFallback: {
+    index: 'public/index.html'
+  },
   hot: true
 }
 const defaultPlugins = [
@@ -21,7 +24,9 @@ const defaultPlugins = [
       NODE_ENV: isDev ? '"development"' : '"production"'
     }
   }),
-  new HTMLPlugin()
+  new HTMLPlugin({
+    template: path.join(__dirname, 'template.html')
+  })
 ]
 let config
 
@@ -88,7 +93,8 @@ if (isDev) {
       }),
       new webpack.optimize.CommonsChunkPlugin({
         name: 'runtime'
-      })
+      }),
+      new webpack.NamedChunksPlugin()
     ])
   })
 }

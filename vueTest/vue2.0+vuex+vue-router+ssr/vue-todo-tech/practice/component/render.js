@@ -51,12 +51,13 @@ new Vue({
   mounted () {
     console.log(this.$refs.comp, this.$refs.tem)
   },
-  // template: '<com ref="comp" :props1="value">' +
-  //   '<span>{{value}}</span>' +
-  //   '</com>',
+  // template: '<com ref="comp" :props1="value" @father="handleClick">' +
+  //   '<span ref="span" slot="head">{{value}}</span>' +
+  //   '</com>'
   // render () {
   //   return this.$createElement()
   // },
+
   render (createElement) {
     return createElement(
       'com',
@@ -65,12 +66,12 @@ new Vue({
         props: {
           props1: this.value
         },
-        // on: {
-        //   father: this.handleClick
-        // }
-        nativeOn: {
-          click: this.handleClick
+        on: {
+          father: this.handleClick
         }
+        // nativeOn: {
+        //   click: this.handleClick
+        // }
       },
       [
         createElement('span', {

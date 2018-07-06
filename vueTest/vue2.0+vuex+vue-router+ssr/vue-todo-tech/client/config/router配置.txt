@@ -1,0 +1,43 @@
+去除url中router默认的# , 
+
+在new Router({routes:[{path,component}],  mode:'history'})加入属性
+
+1.mode:'history'
+去除url中router默认的# 
+
+2.base: 'xxx'
+默认加在path前xxx/app,xxx/login
+
+3.linkActiveClass: 'active-link',
+  linkExactActiveClass: 'exact-active-link'
+给当前选中的router-link设置class名：<router-link class="active-link exact-active-link">
+如：设置激活样式
+
+{
+    path: 'login/exact',
+    component: Login
+  }
+<router-link to="/login/exact">login exact</router-link>
+具体匹配，点login exact才添加exact-active-link类名，login 与login exact两者都触发active-link
+
+
+
+can't GET /app
+
+devServer中配置：
+
+historyApiFallback: {
+  index: '/index.html'
+},
+11:58
+
+对路由router数组的配置
+name:
+[{path:'/app',component:Todo,name:'app'] -->> <router-link to="{name:'app'}">
+这个传给to的是一个对象，我们希望vue解析它，所以采用v-bind方式绑定
+
+meta:
+保存一些页面上的元信息meta:{title:'this is app',description:'sdfsaf'}
+
+child:[{path:'test',component:Todo}],路由嵌套
+子路由：在某个父路由通向的那个组件下再加一个<router-view />可显示
