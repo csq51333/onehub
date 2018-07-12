@@ -13,27 +13,28 @@
 给当前选中的router-link设置class名：<router-link class="active-link exact-active-link">
 如：设置激活样式
 
+
 {
     path: 'login/exact',
     component: Login
   }
 <router-link to="/login/exact">login exact</router-link>
-具体匹配，点login exact才添加exact-active-link类名，login 与login exact两者都触发active-link
+具体匹配，点login exact才添加exact-active-link类名，login 与login exact两者都触发linkActiveClass
 
 
 
-can't GET /app
+一般都会抛出异常：can't GET /app,
 
-devServer中配置：
+要在devServer中配置：
 
 historyApiFallback: {
   index: '/index.html'
 },
 11:58
 
-对路由router数组的配置
+对路由router数组的配置，new Router({ routes:[就是这个数组], linkActiveClass:'active-link',....}）
 name:
-[{path:'/app',component:Todo,name:'app'] -->> <router-link to="{name:'app'}">
+[{path:'/app',component:Todo,name:'app'}] -->> <router-link to="{name:'app'}">
 这个传给to的是一个对象，我们希望vue解析它，所以采用v-bind方式绑定
 
 meta:
@@ -41,3 +42,45 @@ meta:
 
 child:[{path:'test',component:Todo}],路由嵌套
 子路由：在某个父路由通向的那个组件下再加一个<router-view />可显示
+
+[{path:'/app/:id',component:Todo}] -->> <router-link to="app/xxx"> this.$route对象params中{id:xxx}
+给router绑定动态数据时 <router-link v-bind:to="'app/'+ xxx">
+
+★.更好的方式是[{path:'/app/:id',props:true,component:Todo}]，用了props：true就可以在组件props:['id']获取，
+而不需要this.$route.params.id，这样实现了解耦Todo组件，即使不做router的组件，做其他地方的组件，
+我们也可以通过props给Todo传递id，否则Todo只能作为router中的某个组件
+
+router-view可以放多个，加个name属性，在数组那个配置中，component是components多个
+<router-view />
+<router-view name='ddd' />
+components:{ defaulte:'这里可放没name属性的那个router-view它所需渲染的组件', ddd: 'login'}
+
+
+2018/07/11 - 15:08导航守卫
+
+to：到谁那去，from：从谁那来，next：跳转函数，执行它才能正常跳转 
+
+index.js文件（引入vueRouter绑定到节点那个文件,（后来知道叫应用入口文件））router.beforeEach/beforeResolve/afterEach
+前两个都有beforeResolve((to,from,next)=>{if(往往用于验证，页面是否可以跳转){next()})
+afterEach参数中没有next，当然因为已经跳转完了才触发它
+
+to.fullpath //from.parmas ... 类似route
+
+routes数组配置里，每个项里都可以设置一个beforeEnter属性/函数，同样：beforeEnter(to,from,next){next()}
+
+组件配置中，（就是放到methods，computed，porps哪里，这些玩意怎么叫？！）也可以放三个分别是：
+beforeRouteEnter/beforeRouteUpdate/beforeRouteLeave （to,from,next）{next()}
+
+其中beforeRouteUpdate需要注意，需要在同一组件下传不同参数才会触发如：
+<router-link to="/app/123">app1</router-link>
+<router-link to="/app/456">app2</router-link>
+
+关于组件这里面的三个路由导航钩子函数内部是拿不到this的，因为？
+可以通过next中的回调函数next((vm)=>{console.log(vm.id)})
+
+异步加载组件：component: () => import('../views/todo/todo.vue') -- 
+解析这个ES6语法需要npm i babel-plugin-syntax-dynamic-import -D
+npm安装后,babelrc中添加配置plugin:["syntax-dynamic-import"]
+
+component: () => import('../views/todo/todo.vue')后
+只在点击后才加载这个组件，更新bundle.js

@@ -27,6 +27,27 @@ import Item from './item.vue'
 import Tabs from './tabs.vue'
 let id = 0
 export default {
+  props: ['id'],
+  beforeRouteEnter (to, from, next) {
+    console.log('组件内部路由守卫导航enter钩子')
+    next((vm) => {
+      console.log(vm.id)
+    })
+  },
+  beforeRouteUpdate (to, from, next) {
+    console.log('组件内部路由守卫导航updata钩子')
+    next()
+  },
+  beforeRouteLeave (to, from, next) {
+    console.log('组件内部路由守卫导航leave钩子')
+    // if (global.confirm('确定要离开页面？')) {
+    //   next()
+    // }
+    next()
+  },
+  mounted () {
+    console.log(this.id + ' link to 的 app/idxxx现在不传了')
+  },
   data () {
     return {
       todos: [],

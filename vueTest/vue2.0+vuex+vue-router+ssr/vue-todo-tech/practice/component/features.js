@@ -14,7 +14,7 @@ const component = {
   components: {ChildComp},
   template: '<div :style="style">' +
     '<header><slot name="head">{{value}}</slot><ChildComp></ChildComp></header>' +
-    '<button><slot name="buc" aa="插槽属性" :text="text">submit</slot></button>' +
+    '<button><slot name="buc" aa="插槽属性" :t ext="text">submit</slot></button>' +
     '</div>',
   data () {
     return {
