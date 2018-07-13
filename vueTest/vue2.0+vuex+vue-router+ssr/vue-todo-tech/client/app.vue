@@ -2,8 +2,8 @@
   <div id="app">
     <div id="cover"></div>
     <Header></Header>
-    <p>{{count}}</p>
-    <p>{{fullName}}</p>
+    <p>{{TextA}}</p>
+    <p>{{fullName}} {{counter}}</p>
     <!-- <router-link :to="/app/ + search">app</router-link> -->
     <router-link to="/app">app</router-link>
     <router-link to="/login">login</router-link>
@@ -17,6 +17,12 @@
 </template>
 
 <script>
+import {
+  mapState,
+  mapGetters,
+  mapActions,
+  mapMutations
+} from 'vuex'
 import Header from './layout/header.vue'
 import Footer from './layout/footer.jsx'
 // import Todo from './views/todo/todo.vue'
@@ -34,21 +40,39 @@ export default {
     // Todo
   },
   mounted () {
-    // console.log('下面是$route全局对象')
     // console.log(this.$route)
-    // console.log('下面是$store全局对象')
     // console.log(this.$store)
+    let i = 0
     setInterval(() => {
-      this.$store.commit('updateCount', 10)
+      this.updateCount({
+        num: i += 7,
+        num2: i++
+      })
     }, 1000)
+    this.acUp({fn: 'upTextA', num: 5, time: 5000})
   },
   computed: {
-    count () {
-      return this.$store.state.count
-    },
-    fullName () {
-      return this.$store.getters.fullName
-    }
+    // getModulesTextA () {
+    //   return this.$store.state.a.text
+    // },
+    // count () {
+    //   return this.$store.state.count
+    // },
+    ...mapState({
+      counter: 'count',
+      TextA: state => state.a.text
+      // counter: (state) => state.count // 效果同上
+    }),
+    // fullName () {
+    //   return this.$store.getters.fullName
+    // }
+    ...mapGetters(['fullName'])
+  },
+  methods: {
+    ...mapActions({
+      acUp: 'updateCountAsync'
+    }),
+    ...mapMutations(['updateCount', 'upTextA'])
   }
 }
 </script>
