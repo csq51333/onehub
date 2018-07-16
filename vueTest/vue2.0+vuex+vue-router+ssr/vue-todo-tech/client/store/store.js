@@ -16,19 +16,32 @@ export default () => {
     // 模块功能：
     modules: {
       a: {
+        namespaced: true, // 加入这个属性作用域独立，可以在每个模块下起相同名字的函数....mapMutations(['a/upTextA'])
         state: {
-          text: '我是aaaa模块下的text'
+          text: 13
         },
         mutations: {
           upTextA (state, num) {
-            console.log(state)
-            state.text = num instanceof String ? num : 'aaaaa'
+            state.text = num instanceof String ? num : num + state.text
+          }
+        },
+        getters: {
+          textPlus (state, getters, rootState, rootGetters) {
+            return state.text + rootState.b.text
+          }
+        },
+        actions: {
+          add ({state, commit, rootState}) {
+            // 参数ctx相当于store，ctx也可直接解构{state, commit, rootState}这样拿
+            // console.log(ctx)
+            commit('upTextA', rootState.count)
+            console.log(state.text)
           }
         }
       },
       b: {
         state: {
-          text: '我是bbbb模块下的text'
+          text: '我是bbbb'
         }
       }
     }

@@ -1,7 +1,7 @@
 npm i vuex后创建store文件夹下创建store.js
 
 引入vuex，还要引入Vue，然后Vue.use(Vuex),这里跟router还不一样，
-vuex要在引入应用入口文件index.js之前就Vue.use（Vuex）,而router在index.js里再Vue.use(router)也可以
+vuex要在引入应用入口文件index.js之前就Vue.use（Vuex）,而router在index.js里再Vue.use(router)也可以//此处因为服务端渲染后跟router一样在index.js中引入store，Vue.use()
 
 至于放到index中，vue跟dom一样也是一个树型结构，只有放到最外层，它下面的子节点才都能拿到这个对象
 
@@ -15,11 +15,12 @@ new Vuex.Store({ state:{count:0} }),此时初始化一个count=0 状态值
 它内部声明的每个函数的第一个参数默认是state，mutations：{fn(state,num){state.count = num}}
 ★注意：mutations中定义的其他方法只能传state和唯一一个参数，如果this.$state.commit('updataCount',10,'aaa')
 updataCount(state,num,str) --> console.log(str) //undefind
-----想传多个数据可以包装成对象传参，this.$state.commit('updataCount'{num: 10, num2: 20})
+----想传多个数据可以包装成对象传参，this.$state.commit('updataCount'，{num: 10, num2: 20})
 mutations下，取得时候可以用解构的方法取updataCount(state,｛num,num2｝){console.log(num,num2)}
 
 3.getters：（computed）
 
+后因为服务端渲染：
 结尾要export default store，插入到应用入口index.js
 在index.js中import store from '../??/store.js'
 然后在new Vue中跟添加router一样添加store就行了
@@ -33,12 +34,14 @@ mutations下，取得时候可以用解构的方法取updataCount(state,｛num,num2｝){console.l
 4-6 08:20
 
 computed中运用store提供的方法：
-mutations中的方法可以通过mapstate获取
+之前用this.$store.state.count这样的取法很僵硬
+vuex提供：
+state中的方法可以通过mapstate获取
 getters中的方法可以通过mapGetters获取
 
 引入: import { mapState,mapGetters } from 'vuex'
 
-使用前为了使用...mapState格式，还需安装babel-preset-stage-1
+使用前为了使用...mapState，‘...’这种ES6展开格式，还需安装babel-preset-stage-1
 
 之后就在computed中{ ...mapState(['count']), ...mapGetters(['fullName']), reser(){...}......}
 
@@ -47,8 +50,8 @@ getters中的方法可以通过mapGetters获取
 
 new Vuex.Store（{ strict: true }）严格模式，控制除了mutations以外，其他地方不可修改state中的值
 
-4.action，与mutations一样存放方法，但它放的是异步的
-在vue中用dispatch：this.$store.dispatch('xx')触发，对应的mutations用的是this.$store.commit()
+4.actions，与mutations一样存放方法，但它放的是异步的
+在vue中用dispatch：this.$store.dispatch('xx')触发actions提供的异步函数，对应的mutations用的是this.$store.commit()
 
 
 5.module
@@ -56,9 +59,17 @@ module：{a:{state:{text:1},mutations:{}},b:{state:{text:2},mutations:{}}}
 取：this.$store.state.a.text 或...mapState({ TextA: (state) => state.a.text }）
 
 但是mutation就被vuex默认在一个作用域...mapMutations(['updateCount', 'upTextA'])
-而不需要，a.xxx去取
+mutations不需要，a.xxx去取
 如果想区分作用域，在module中的a下面声明一个新属性namespaced: true命名空间
 声明时...mapMutations(['updateCount', 'a/upTextA'])
 使用时this['a/upTextA'],以变量的形式去取
 
 4-8 4:00 
+getters,mutations都能拿到state，module默认是自己所在模块中的state
+getters,computed都是要return出去这个值
+actions第一个参数是store，模块中的actions第一个参数是ctx相当与store
+
+模块内的getters中的方法，如：textPlus
+textPlus（state，getters，rootState）
+
+4-8 12:25

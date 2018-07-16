@@ -1,5 +1,5 @@
 const state = {
-  count: 0,
+  count: 10,
   firstName: 'Shiqi',
   lastName: 'Chen'
 }
