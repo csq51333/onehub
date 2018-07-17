@@ -21,7 +21,7 @@ mutations下，取得时候可以用解构的方法取updataCount(state,｛num,num2｝){console.l
 3.getters：（computed）
 
 后因为服务端渲染：
-结尾要export default store，插入到应用入口index.js
+结尾要export default ()=>{return new Vuex.store({strict})}，插入到应用入口index.js
 在index.js中import store from '../??/store.js'
 然后在new Vue中跟添加router一样添加store就行了
 
@@ -68,8 +68,20 @@ mutations不需要，a.xxx去取
 getters,mutations都能拿到state，module默认是自己所在模块中的state
 getters,computed都是要return出去这个值
 actions第一个参数是store，模块中的actions第一个参数是ctx相当与store
+ctx参数对象中包括：commit,dispatch,getters,rootGetters,rootSrate,state
 
 模块内的getters中的方法，如：textPlus
-textPlus（state，getters，rootState）
+textPlus（state, getters, rootState, rootGetters）
 
 4-8 12:25
+单个模块中：namespaced：true --这个模块的作用域独立，可以起跟父作用域相同的名字
+一个模块没加namespaced前，和函数mutations和actions这类的作用域是平级的，可以相互直接掉，
+加了之后
+父调子：在调a模块的updateTextA函数时：.vue中...map调 : 'a/updateTextA'加模块名
+子调父：子模块actions中在commit('父级函数'，参数，{root:true}) 加{root:true}
+子调子：前提：actions调另一模块的mutations，先看各自有没有加namespaced：true属性，模块可以有的加namespaced：true，有的不加
+             调用者没，被调者没，直接写函数名
+             调用者没，被调者有，commit('a/函数名')
+             调用者有，被调者没，直接写函数名 + { root: true }
+             调用者有，被调者有，commit('a/函数名') + { root: true }
+总结：调用一个有namespaced：true的模块的函数要 a/xxx 一个有namespaced：true的模块取调别的要{ root: true }

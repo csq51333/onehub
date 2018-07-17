@@ -13,6 +13,21 @@ Vue.use(Vuex)
 const router = createRouter()
 const store = createStore()
 
+store.registerModule('c', {
+  state: {
+    text: 3
+  }
+})
+
+// store.watch((state) => state.count + 1000, (newCount) => {
+//   console.log('new count watched:', newCount)
+// })
+
+// store.subscribe((mutation, state) => {
+//   console.log(mutation.type) // 函数名
+//   console.log(mutation.payload) // 函数的参数
+// })
+
 router.beforeEach((to, from, next) => {
   console.log('beforeEach')
   next()

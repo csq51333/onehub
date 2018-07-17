@@ -2,7 +2,7 @@
   <div id="app">
     <div id="cover"></div>
     <Header></Header>
-    <p>{{textPlus}} </p>
+    <!-- <p>{{textPlus}} </p> -->
     <p>{{fullName}} {{counter}}</p>
     <!-- <router-link :to="/app/ + search">app</router-link> -->
     <router-link to="/app">app</router-link>
@@ -42,16 +42,16 @@ export default {
   mounted () {
     // console.log(this.$route)
     // console.log(this.$store)
-    console.log(this['a/textPlus'])
-    let i = 0
-    setInterval(() => {
-      this.updateCount({
-        num: i += 7,
-        num2: i++
-      })
-    }, 1000)
-    this.acUp({fn: 'a/upTextA', num: 5, time: 5000})
-    this.aMod()
+    // console.log(this['a/textPlus'])
+
+    // let i = 0
+    // setInterval(() => {
+    //   this.updateCount({
+    //     num: i += 7,
+    //     num2: ++i
+    //   })
+    // }, 1000)
+    this.acUp({fn: 'updateCount', num: 5, time: 5000})
   },
   computed: {
     // getModulesTextA () {
@@ -62,7 +62,8 @@ export default {
     // },
     ...mapState({
       counter: 'count',
-      TextA: state => state.a.text
+      TextA: state => state.a.text,
+      TextC: (state) => state.c.text
       // counter: (state) => state.count // 效果同上
     }),
     // fullName () {
@@ -73,16 +74,17 @@ export default {
     //   return this['a/textPlus']
     // }
     ...mapGetters({
-      fullName: 'fullName',
-      textPlus: 'a/textPlus'
+      fullName: 'fullName'
+      // textPlus: 'a/textPlus'
     })
   },
   methods: {
     ...mapActions({
       acUp: 'updateCountAsync',
-      aMod: 'a/add'
+      aMod: 'a/add',
+      show: 'c/show'
     }),
-    ...mapMutations(['updateCount', 'a/upTextA'])
+    ...mapMutations(['updateCount'])
   }
 }
 </script>
