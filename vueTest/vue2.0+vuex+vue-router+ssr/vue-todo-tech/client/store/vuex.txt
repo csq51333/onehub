@@ -85,3 +85,56 @@ textPlus（state, getters, rootState, rootGetters）
              调用者有，被调者没，直接写函数名 + { root: true }
              调用者有，被调者有，commit('a/函数名') + { root: true }
 总结：调用一个有namespaced：true的模块的函数要 a/xxx 一个有namespaced：true的模块取调别的要{ root: true }
+★注意，第三个参数为{ root: true }才有效，就是没参数，加个空参数commit('conso', '', { root: true })
+
+模块下依旧可以再加模块，无限延伸
+
+动态注册一个模块，router异步加载时，只有某个异步路由组件需要用到，index.js文件
+const store = createStore()
+store.registerModule('c', {
+  state: {
+    text: 3
+  }
+})
+unregisterModule，解绑
+
+2.store.watch(（state）=>{},(newState)=>{console.log(newState)})
+第一个参数类似getters不用管，第二个函数待第一个参数监听的值改变时触发
+（触发后返回的new值是经过第一个函数操作过的值，也就是第一个函数在这里才运行，跟着一起返回）
+
+3.mutations中的函数调用时触发sucscribe
+store.subscribe((mutation, state) => {
+  console.log(mutation.type) // 函数名
+  console.log(mutation.payload) // 函数的参数
+})
+store.subscribeAction，效果同上，监听actions的参数(action,state)
+
+vue提供API支持webpack热更新功能：
+将return new Vuex.Store({...})改为，const store = new Vuex.Store({...})
+  if (module.hot) {
+    module.hot.accept([
+      './state/state',
+      './mutations/mutations',
+      './getters/getters',
+      './actions/actions'
+    ], () => {
+      const newState = require('./state/state').default
+      const newMutations = require('./mutations/mutations').default
+      const newGetters = require('./getters/getters').default
+      const newActions = require('./actions/actions').default
+
+      store.hotUpdate({
+        state: newState,
+        mutations: newMutations,
+        getters: newGetters,
+        actions: newActions
+      })
+    })
+  }
+
+  return store
+
+插件？
+plugins: [（store）=> {}]
+
+使用vuex时，对vuex内部值的修改最好都由vuex自己来做
