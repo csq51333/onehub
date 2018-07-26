@@ -166,12 +166,20 @@ function xiP(){
 	for(var i=0;i<78;i++){
 		zArr.push(i);
 	}
+	console.log(zArr)
 	//打乱z-index
-	for(var n=0;n<78;n++){
-		pArr[n].style.zIndex = zArr[rd(0,zArr.length)]
+	for(var n=0;n<pArr.length;n++){
+		var x = zArr.splice(rd(0,zArr.length),1)[0]
+		pArr[n].style.zIndex = x
 	}
 	//横向铺开以z-index为序列
+	for(var j=0;j<pArr.length;j++){
+		pArr[j].style.top = 0 + 'px';
+		pArr[j].style.left = -200 + pArr[j].style.zIndex*4 + 'px';
+		pArr[j].style.transform = 'rotate(' + (rd(0,10) > 5 ? 0 : 180) + 'deg)'
+	}
+	console.log(zArr)
 }
-
+xiP()
 </script>
 </html>
