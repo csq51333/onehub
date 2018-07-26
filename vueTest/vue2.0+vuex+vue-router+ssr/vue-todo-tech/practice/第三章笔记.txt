@@ -22,7 +22,7 @@ vm.$delete
 
 vue内部调用的this是这个vm实例：this.$data == vm.$data
 
-.vue里没用template的属性，vue-loader处理直接变成render 函数
+.vue这种文件里没用template的属性，vue-loader处理直接变成render 函数
 这样做的好处是，template解析成render中间很耗时，直接效率高
 
 vue默认白名单访问不了全局变量，js默认全局对象可以如new Date
@@ -62,10 +62,10 @@ data(){return obj}如果obj是全局变量，这个组件写两个会内容联动
 props跟data一样挂载到this，修改props虽然成功但是会抛出wran，组件的显示因由外部约束
 props有两种：['xxx','xx']和对象描述形式两种
 
-props.deafault.vailted
+props.deafault.vailted？
 componentConfig1 = {extends:componentConfig}
 
-在new Vue({name:xx}) 中自定义的属性用this.name检索不到，用$option.name
+在new Vue({name:xx}) 中自定义的属性用this.name检索不到，用$option.name可以
 组件中this.$parent.$option.name
 可以在子组件中直接通过this.$parent.name调用父组件的内容
 子组件始终关联调用它的父级，多个?
