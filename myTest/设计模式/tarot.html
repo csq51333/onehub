@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>tarot</title>
+	<style>
+		.origin{
+			position: relative;
+			width: 10px;
+			height: 10px;
+			border-radius: 10px;
+			background-color: black;
+			margin: 200px auto;
+		}
+		.pai{
+			width: 60px;
+			height: 100px;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			box-sizing: border-box;
+			border: 2px solid yellow;
+			background-color: orange;
+			transition: 1s;
+			transform-origin: 50% 50%;
+		}
+		.pai:hover{
+			background-color: cyan;
+		}
+		/*.pai:nth-of-type(1){transform:translateY(-80px) rotate(30deg)}*/
+		/*.pai:nth-of-type(2){transform: rotate(30deg)}
+		.pai:nth-of-type(3){transform: rotate(60deg)}
+		.pai:nth-of-type(4){transform: rotate(90deg)}
+		.pai:nth-of-type(5){transform: rotate(120deg)}
+		.pai:nth-of-type(6){transform: rotate(150deg)}*/
+	</style>
+</head>
+<body>
+	<div class="origin">
+		<div class="pai">1</div>
+		<div class="pai">2</div>
+		<div class="pai">3</div>
+		<div class="pai">4</div>
+		<div class="pai">5</div>
+		<div class="pai">6</div>
+		<div class="pai">7</div>
+		<div class="pai">8</div>
+		<div class="pai">9</div>
+		<div class="pai">10</div>
+
+		<div class="pai">11</div>
+		<div class="pai">12</div>
+		<div class="pai">13</div>
+		<div class="pai">14</div>
+		<div class="pai">15</div>
+		<div class="pai">16</div>
+		<div class="pai">17</div>
+		<div class="pai">18</div>
+		<div class="pai">19</div>
+		<div class="pai">20</div>
+
+		<div class="pai">21</div>
+		<div class="pai">22</div>
+		<div class="pai">23</div>
+		<div class="pai">24</div>
+		<div class="pai">25</div>
+		<div class="pai">26</div>
+		<div class="pai">27</div>
+		<div class="pai">28</div>
+		<div class="pai">29</div>
+		<div class="pai">30</div>
+
+		<div class="pai">31</div>
+		<div class="pai">32</div>
+		<div class="pai">33</div>
+		<div class="pai">34</div>
+		<div class="pai">35</div>
+		<div class="pai">36</div>
+		<div class="pai">37</div>
+		<div class="pai">38</div>
+		<div class="pai">39</div>
+		<div class="pai">40</div>
+
+		<div class="pai">41</div>
+		<div class="pai">42</div>
+		<div class="pai">43</div>
+		<div class="pai">44</div>
+		<div class="pai">45</div>
+		<div class="pai">46</div>
+		<div class="pai">47</div>
+		<div class="pai">48</div>
+		<div class="pai">49</div>
+		<div class="pai">50</div>
+
+		<div class="pai">51</div>
+		<div class="pai">52</div>
+		<div class="pai">53</div>
+		<div class="pai">54</div>
+		<div class="pai">55</div>
+		<div class="pai">56</div>
+		<div class="pai">57</div>
+		<div class="pai">58</div>
+		<div class="pai">59</div>
+		<div class="pai">60</div>
+
+		<div class="pai">61</div>
+		<div class="pai">62</div>
+		<div class="pai">63</div>
+		<div class="pai">64</div>
+		<div class="pai">65</div>
+		<div class="pai">66</div>
+		<div class="pai">67</div>
+		<div class="pai">68</div>
+		<div class="pai">69</div>
+		<div class="pai">70</div>
+
+		<div class="pai">71</div>
+		<div class="pai">72</div>
+		<div class="pai">73</div>
+		<div class="pai">74</div>
+		<div class="pai">75</div>
+		<div class="pai">76</div>
+		<div class="pai">77</div>
+		<div class="pai">78</div>
+	</div>
+</body>
+<script>
+var ogn = document.querySelector('.origin')
+var ox = ogn.offsetLeft
+var oy = ogn.offsetTop
+console.log(ox,oy)
+function min90(angle){
+	var ag = angle*Math.PI/180;
+	var left = Math.sin(ag)*100
+	var top = Math.cos(ag)*100
+	return {
+		x: left,
+		y: top
+	}
+}
+
+var pArr = document.querySelectorAll('.pai');
+var len = pArr.length;
+for(var i=0;i<len;i++){
+	!function(i){
+		var ag = 360/len*i
+		var left = min90(ag).x;
+		var top = min90(ag).y
+		pArr[i].style.left = left + 'px';
+		pArr[i].style.top = top + 'px';
+		pArr[i].style.transform = 'rotate('+ -ag +'deg)'
+		pArr[i].style.zIndex = len-i;
+	}(i)
+}
+
+ogn.addEventListener('click',function(e){
+	console.log(e.target.innerHTML)
+})
+
+function rd(min,max){
+	return Math.round(Math.random()*(max-min)+min)
+}
+
+function xiP(){
+	var zArr = []
+	for(var i=0;i<78;i++){
+		zArr.push(i);
+	}
+	//打乱z-index
+	for(var n=0;n<78;n++){
+		pArr[n].style.zIndex = zArr[rd(0,zArr.length)]
+	}
+	//横向铺开以z-index为序列
+}
+
+</script>
+</html>
