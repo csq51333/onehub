@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>贪吃蛇-网页版</title>
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./css/index.css">
+</head>
+<body>
+	<div class="game-wrap clearfix">
+		<div id="snake_box" class="snake-box"></div>
+		<div class="right-operate">
+			<div class="mb-10">
+				得分：<span class="label label-success font-18" id="grade">0</span>
+			</div>
+			<div class="form-group">
+				<select class="form-control" id="speed_select">
+					<option value="slow">慢速</option>
+					<option value="medium">中等</option>
+					<option value="fast">快速</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<button type="button" class="btn btn-primary" id="start_btn">开始游戏</button>
+			</div>
+			<div class="form-group">
+				<button type="button" class="btn btn-warning" id="pause_btn">暂停游戏</button>
+			</div>
+			<div class="form-group">
+				<button type="button" class="btn btn-info" id="continue_btn">继续游戏</button>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="./js/tool.js"></script>
+	<script type="text/javascript" src="./js/food.js"></script>
+	<script type="text/javascript" src="./js/snake.js"></script>
+	<script type="text/javascript" src="./js/Game.js"></script>
+	<script type="text/javascript" src="./js/index.js"></script>
+</body>
+</html>

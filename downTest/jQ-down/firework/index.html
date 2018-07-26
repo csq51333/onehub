@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>烟火</title>
+    <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/deepCopy.js"></script>
+	<script src="js/Firework.js"></script>	
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>   
+</body>
+<script>
+    var canvas = $$("canvas"),
+		ctx = canvas.getContext("2d"),
+		g = 0.25,//模拟重力加速度
+		n = 5,//一次性发射的烟火的数量
+		fireworkList = [],//存放所有烟火对象
+		//烟火形状                                                        圆形                                                              椭圆形                                                          爱心形
+		fireworkTypeList = [createCircleFirework, createEllipseFirework, createHeartFirework],
+		totalNum = 0,//发射烟火的总数量
+		surprise_num = 25,//当发射烟火数量达到25时,发射生日快乐字样的烟火
+		flag = true;//是否发射生日快乐字样的烟火
+	canvas.width = $(window).width() - 15;
+	canvas.height = $(window).height() - 20;
+	
+	
+	
+	var init = function(firework,params){//初始化一个烟火
+    	var beforeBalst = firework.getBeforeBalst();
+    	firework.setCtx(ctx);
+    	firework.setStatus(1);//状态为点燃引线
+    	firework.setNum(100 + Math.floor(20 * Math.random()));//爆炸之后的烟花数量
+    	firework.setRoundness(getType(params) == "object" ? (getType(params.roundness) == "number" ? params.roundness : 0.25) : 0.25);//默认的规则度是0.25,这样爆炸的烟花与真实的最像
+    	//firework.setFireworkType(getType(params) == "object" ? params.fireworkType : fireworkTypeList[Math.floor(Math.random() * fireworkTypeList.length)]);//从三种形状中随机烟花形状
+    	firework.setFireworkType(getType(params) == "object" ? params.fireworkType : createCircleFirework);//默认圆形烟花
+    	firework.setDelay(Math.floor(30 * Math.random()));//引线燃烧的时间,单位为帧, 最多30帧,即0.5s
+    	beforeBalst.setAnimate({
+    		quiescence : {//发射位置为底部中间
+        		x : canvas.width / 2,
+        		y : canvas.height,
+        		deg : 0,
+        		zoom : 1
+        	},move : {//发射速度向量
+        		vx : -7 + 14 * Math.random(),
+        		vy : -22 + 4 * Math.random(),
+        		pal : 0,
+        		scale : 0
+        	},translate : {//发射加速度,有一个为g的重力加速度
+        		ax : 0,
+        		ay : g,
+        		apal : 0,
+        		scale : 0
+        	}
+    	});
+    	beforeBalst.setR(3);//烟火半径为3像素
+   	 	beforeBalst.setColor("#FFFFFF");//白色
+    	beforeBalst.setLife(50 + Math.floor(Math.random() * 50));//烟花从发射到爆炸的时间,单位为帧,即50-100帧后爆炸
+    	beforeBalst.setBase();//记录烟花发射的初始状态
+	}
+	
+	for(var i = 0; i < n; i++){//初始化n个烟火
+		var firework = Firework.getInstance();
+		init(firework);
+		fireworkList.push(firework);
+		totalNum++;
+	}
+
+    var draw = function(){//描绘每一帧烟火的状态
+    	//整个canvas充满黑幕,模拟黑夜
+    	ctx.globalCompositeOperation = 'source-over';
+    	ctx.globalAlpha = 0.2;
+    	ctx.fillStyle = '#000003';
+    	ctx.fillRect(0, 0, canvas.width, canvas.height);
+    	//描绘每个烟火的状态
+    	ctx.globalCompositeOperation = 'screen';
+    	$.each(fireworkList,function(index,value){
+    		value.draw();
+    	});
+    	
+    };
+    
+    var update = function(){//更新每一帧烟火的状态
+    	for(var i = fireworkList.length - 1; i >= 0; i--){
+    		fireworkList[i].update();//更新
+    		if(fireworkList[i].getStatus() == 5){//烟火消失
+    			fireworkList.splice(i,1);//在烟火集合中将这个烟火去除掉
+    			if(totalNum < surprise_num){//当发射烟火数量没到25
+    				var firework = Firework.getInstance();//继续生成新的烟火
+        			init(firework);
+        			fireworkList.push(firework);
+        			totalNum++;
+    			}  
+    			if(fireworkList.length == 0 && flag){//发射生日快乐烟火和一箭穿心烟火
+    				var firework = Firework.getInstance();
+        			init(firework,{fireworkType:createCustomFirework,roundness:1});
+        			fireworkList.push(firework);        			
+        			var firework2 = Firework.getInstance();
+        			init(firework2,{fireworkType:createDoubleHeartFirework,roundness:1});
+        			fireworkList.push(firework2);
+        			flag = false;
+    			}
+    		}
+    	}
+    }
+    
+    var loop = function(){
+    	draw();
+    	update();						
+		requestAnimationFrame(function(){//每秒触发60次的方法,因此动画是60帧的
+			loop();
+		});
+	};
+    
+    loop();
+</script>
+</html>

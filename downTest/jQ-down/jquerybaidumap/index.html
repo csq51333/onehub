@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>地图坐标定位</title>
+	 <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+	 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=67jMQ5DmYTe1TLMBKFUTcZAR"></script>
+    <style type="text/css">
+    body{margin: 0; padding: 0; font:12px/1 "Microsoft Yahei", "微软雅黑", sans-serif;}
+    p, span {
+      font-family: 'Microsoft Yahei'!important;
+    }
+    </style>
+</head>
+<body>
+	<div id="map">
+	    <div style="width: 100%; height: 503px;" id="allmap"></div>
+	</div>
+
+    <button style="width: 300px;height: 50px;" id="map1">
+    	定位到东华大学国家大学科技园
+    </button>
+    <button style="width: 300px;height: 50px;"  id="map2" >
+    	定位到上海市浦东新区晨阳小学
+    </button>
+  
+</body>
+</html>
+<iframe style="display: none;" id="geoPage" width="100%" height="30%" frameborder=0 scrolling="no"  src="https://apis.map.qq.com/tools/geolocation?key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp&effect=zoom"></iframe>
+<!-- 接收到位置信息后 通过 iframe 嵌入位置标注组件 -->
+
+<script type="text/javascript">
+	  function ShowMap(zuobiao, name, addrsee, phone, chuanzhen, zoom) {
+        var arrzuobiao = zuobiao.split(',');
+        var map = new BMap.Map("allmap");
+        map.addControl(new BMap.OverviewMapControl());   
+        map.centerAndZoom(new BMap.Point(arrzuobiao[0], arrzuobiao[1]), zoom);
+        map.addControl(new BMap.NavigationControl());
+        var marker = new BMap.Marker(new BMap.Point(arrzuobiao[0], arrzuobiao[1]));
+        map.addOverlay(marker);
+        var infoWindow = new BMap.InfoWindow('<p style="color: #bf0008;font-size:14px;">' + name + '</p><p>地址：' + addrsee + '</p><p>电话：' + phone + '</p><p>传真：' + chuanzhen + '</p>');
+        marker.addEventListener("click", function () {
+            this.openInfoWindow(infoWindow);
+        });
+        marker.openInfoWindow(infoWindow);
+    }
+	  
+	  
+	var loc;
+    var isMapInit = false;
+    //监听定位组件的message事件
+    window.addEventListener('message', function(event) {
+        loc = event.data; // 接收位置信息       
+        //console.log('location', loc);
+        if(loc  && loc.module == 'geolocation') { //定位成功,防止其他应用也会向该页面post信息，需判断module是否为'geolocation'
+            var markUrl = 'https://apis.map.qq.com/tools/poimarker' +
+                    '?marker=coord:' + loc.lat + ',' + loc.lng +
+                    ';title:我的位置;addr:' + (loc.addr || loc.city) +
+                    '&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp';
+            //给位置展示组件赋值
+           // document.getElementById('markPage').src = markUrl;
+            var lng = loc.lng//经度
+            var lat = loc.lat //维度
+            console.log(lng)
+        ShowMap(''+lng+','+lat+'', 'dome', loc.city,'1388888888', '010-88888888', '20');
+        }else { 
+            console.log('定位失败');
+        }
+    }, false);
+    
+  
+    
+    
+    
+    $('#map1').click(function(){//点击更换坐标
+    	   ShowMap('113.54143,22.274386', 'dome', '成都', '东华大学国家大学科技园-南门', '888666888', '20');
+    })
+     $('#map2').click(function(){//点击更换坐标   
+    	   ShowMap('121.75466,31.184403', 'dome', '上海', '上海市浦东新区晨阳小学', '021-66658888', '20');
+    })
+  
+</script>

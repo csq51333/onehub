@@ -1,0 +1,82 @@
+<!--
+    名称：手势拖动选择日期-移动端
+    作者：helang.love@qq.com
+    插件：mobileSelect
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>手势拖动选择日期-移动端</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="lib/mobileSelect.css">
+    <script type="text/javascript" src="lib/mobileSelect.js"></script>
+    <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <style type="text/css">
+        html,body{
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            font-size: 16px;
+            font-family: Helvetica,"Helvetica Neue",Arial,sans-serif;
+            height: 100%;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .list{
+            margin: 50px 25px 0 25px;
+            text-align: center;
+        }
+        .list>li{
+            list-style: none;
+            border: #CCCCCC solid 1px;
+            height: 32px;
+            line-height: 32px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<h2 style="text-align: center;margin: 25px 0;">选择日期插件</h2>
+<ul class="list">
+    <li id="select_1">选择日期-设置全部参数</li>
+    <li id="select_2">选择日期-默认全部参数</li>
+    <li id="select_3">选择日期-设置默认选择</li>
+    <li id="select_4">选择日期-设置日期区间</li>
+</ul>
+<script type="text/javascript" src="selectDate.js"></script>
+<script type="text/javascript">
+    /*设置全部参数*/
+    $.selectDate("#select_1",{
+        start:1994,
+        end:2018,
+        select:[2012,5,6],
+        title:'这个选择器很秀'
+    },function (data) {
+        console.log(data);
+    });
+    /*默认全部参数*/
+    $.selectDate("#select_2",{},function (data) {
+        alert(data.year+"-"+data.month+"-"+data.day);
+        console.log(data);
+    });
+    /*设置默认选择*/
+    $.selectDate("#select_3",{
+        select:[2012,5,6]
+    },function (data) {
+        console.log(data);
+    });
+    /*设置日期区间*/
+    $.selectDate("#select_4",{
+        start:1994,
+        end:2018
+    },function (data) {
+        console.log(data);
+    });
+</script>
+</body>
+</html>
