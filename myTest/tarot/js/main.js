@@ -27,9 +27,11 @@
 				div.zinx = 1;
 				div.num = i;
 				div.reg = 0;
+				div.setAttribute('No.',i)
+				div.setAttribute('wei',"正")
 
 				divb.className = 'biao'
-				divb.style.backgroundImage = 'url("img/waite/1.jpg")'
+				divb.style.backgroundImage = 'url("img/'+obj.kind+i+'.jpg")'
 
 				divbg.className = 'bei'
 				div.appendChild(divb)

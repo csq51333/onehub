@@ -26,3 +26,7 @@ function getRoutate(str,ag){
 	var angle = new Number(str.match(re)[0])
 	return angle;
 }
+
+function ZNWei(ag){
+	return (ag >= 90 && ag < 270 || ag <= -90 && ag > -270) ? 180 : 0;
+}
