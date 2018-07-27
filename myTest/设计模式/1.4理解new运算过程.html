@@ -8,6 +8,7 @@
 	<p id="div1">理解new运算过程</p>
 </body>
 <script>
+// 1.理解new运算过程
 function Person( name ){
 	this.name = name;
 }; 
@@ -35,8 +36,10 @@ console.log( Object.getPrototypeOf( a ) === Person.prototype ); // 输出：true
 // var a = objectFactory( A, 'sven' );
 // var a = new A( 'sven' );
 
+
+
  
- 
+// 2.改变document中的this指向
 document.getElementById = (function( func ){
 	return function(){
 		return func.apply( document, arguments );
@@ -49,19 +52,26 @@ var div = getId( 'div1' );
 // var div = document.getElementById('div1');
 console.log( div.id );    // 输出： div1
 
-var ooo = {}
+
+
+// 3.call，apply中的arguments
+var ooo = {}  
 function n(){
 	this.name=name;
 	this.age="18";
 	this.arg = [];
 	// 如果直接传递this.arg=arguments
-	// arg是一个参数类数组，无法做数组操作，如：ooo.arg.pop()
+	// arg是一个类数组对象（Arguments），无法做数组操作，如：ooo.arg.pop()
 	this.arg[0] = arguments[0]
 	this.arg[1] = arguments[1]
 	this.arg[2] = arguments[2]
 	this.arg[3] = arguments[3]
 }
-n.apply(ooo,["name",111,99,function(){return 1}])
+// n.apply(ooo,["name",111,99,function(){return 1}])
+
+n.call(ooo,"name",111,99,function(){return 1})
+//call,apply 是直接运行n这个函数的，并且覆盖ooo
+//有覆盖就覆盖，无能覆盖的只是运行n函数
 console.log(ooo)
 </script>
 </html>

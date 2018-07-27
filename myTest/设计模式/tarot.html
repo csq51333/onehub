@@ -169,7 +169,7 @@ function xiP(){
 	console.log(zArr)
 	//打乱z-index
 	for(var n=0;n<pArr.length;n++){
-		var x = zArr.splice(rd(0,zArr.length),1)[0]
+		var x = zArr.splice(rd(0,zArr.length-1),1)[0]
 		pArr[n].style.zIndex = x
 	}
 	//横向铺开以z-index为序列
@@ -181,5 +181,32 @@ function xiP(){
 	console.log(zArr)
 }
 xiP()
+
+//commom.js
+function getParmas(){
+	var parmas = {}
+	var str = window.location.hash;
+	var search = str.substr(1)
+	var keys = search.split('&')
+	for(var i=0;i<keys.length;i++){
+		if(keys[i]){
+			var arr = keys[i].split('=');
+			parmas[arr[0]] = !/^\{(\{*|\w*|\s*|\,*|\:*|\}*\'*\"*)*\}$/.test(arr[1]) ? arr[1] : eval('('+arr[1]+')')
+		}
+	}
+
+	return parmas;
+}
+
+!function(){
+	var main = {
+		sign: '',
+		init: function(){
+			this.sign = getParmas()
+			this.initPai()
+		},
+		'd':function(){}
+	}
+}()
 </script>
 </html>

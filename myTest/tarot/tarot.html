@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>tarot</title>
+	<style>
+		#origin{
+			position: relative;
+			width: 10px;
+			height: 10px;
+			border-radius: 10px;
+			background-color: black;
+			margin: 200px auto;
+			background-color: black;
+		}
+		.pai{
+			width: 10vw;
+			height: 17vw;
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			box-sizing: border-box;
+			border: 2px solid yellow;
+			background-color: orange;
+			transition: 1s;
+			transform-origin: 5vw vw;
+			background-image: url('img/waite/1.jpg');
+			background-size: cover;
+			background-repeat: no-repeat;
+		}
+		.pai:hover{
+			background-color: cyan;
+		}
+		.biao{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			transform: rotateY(-180deg);
+			background-image: url('img/waite/3.jpg');
+			-webkit-background-size: cover;
+			background-size: cover;
+		}
+		.bei{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			-webkit-background-size: contain;
+			background-size: contain;
+			background-position: 0 11.5px;
+			background-image: url('img/waite/b.jpg');
+		}
+	</style>
+</head>
+<body>
+	<div id="origin">
+
+	</div>
+</body>
+<script src="js/common.js"></script>
+<script src="js/main.js"></script>
+<script>
+var ogn = document.getElementById('origin')
+var ox = ogn.offsetLeft
+var oy = ogn.offsetTop
+
+console.log(ox,oy)
+function coordinate(angle){
+	var ag = angle*Math.PI/180;
+	var left = Math.sin(ag)*150
+	var top = Math.cos(ag)*150
+	return {
+		x: left,
+		y: top
+	}
+}
+
+var pArr = document.querySelectorAll('.pai');
+var len = pArr.length;
+
+
+ogn.addEventListener('click',function(e){
+	console.log(e.target.innerHTML)
+})
+
+function circle(){
+	for(var i=0;i<len;i++){
+		!function(i){
+			var ag = 360/len*i
+			var left = coordinate(ag).x;
+			var top = coordinate(ag).y
+			pArr[i].style.left = left + 'px';
+			pArr[i].style.top = top + 'px';
+			pArr[i].style.transform = 'rotate('+ -ag +'deg)'
+			pArr[i].style.zIndex = i;
+		}(i)
+	}
+}
+
+function rd(min,max){
+	return Math.round(Math.random()*(max-min)+min)
+}
+
+function daL(){
+	for(var i = 0; i<len;i++){
+		pArr[i].style.top = rd(-100,100) + 'px';
+		pArr[i].style.left = rd(-100,100) + 'px';
+		pArr[i].style.transform = 'rotate(' + rd(-360,360) + 'deg)'
+	}
+	xiP()
+}
+
+function heS(){
+	for(var i = 0; i<len;i++){
+		pArr[i].style.top = 0 + 'px';
+		pArr[i].style.left = 0 + 'px';
+		var ag = angleZ(pArr[i])
+		var zn = ZNWei(ag)
+		pArr[i].style.transform = 'rotate(' + zn + 'deg)'
+	}
+}
+
+function xiP(){
+	var zArr = []
+	for(var i=0;i<len;i++){
+		zArr.push(i);
+	}
+	//打乱z-index
+	for(var n=0;n<len;n++){
+		pArr[n].style.zIndex = zArr.splice(rd(0,len-1),1)[0]
+	}
+}
+
+function puK(){
+	//横向铺开以z-index为序列
+	for(var i=0;i<len;i++){
+		pArr[i].style.top = 0 + 'px';
+		pArr[i].style.left = -400 + pArr[i].style.zIndex*10 + 'px';
+		var ag = angleZ(pArr[i])
+		var zn = ZNWei(ag)
+		pArr[i].style.transform = 'rotate(' + zn + 'deg)'
+	}
+}
+
+function zhuan(pai){
+	reg = !reg ? -180 : 0;
+	pai.style.transform = "rotateY("+reg+"deg)"
+	setTimeout(function(){
+		zidx = zidx == -1? 1:-1;
+		bei.style.zIndex = zidx
+	},300)
+}
+
+function ZNWei(ag){
+	return (ag >= 90 && ag < 270 || ag <= -90 && ag > -270) ? 180 : 0;
+}
+
+document.addEventListener("click",function(e){
+	var el
+	if(e.target.className == 'bei' || e.target.className == 'biao'){
+		el = e.target.parentNode;
+		var b = getRoutate(el.style.transform,'Z')
+		el.reg  = !el.reg ? 180 : 0;
+		el.style.transform = "rotateY("+ el.reg +"deg) rotateZ("+ (-b) +"deg)"
+		setTimeout(function(){
+			el.zinx = el.zinx == -1 ? 1 : -1;
+			el.querySelector('.bei').style.zIndex = el.zinx
+		},300)
+	}
+	console.log(el)
+})
+
+</script>
+</html>

@@ -40,4 +40,17 @@ __proto__ 与 prototype
 
 
 每个函数都包含两个非继承而来的方法：apply()和call()。这两个方法的用途是在特定的作用域中调用函数，实际上等于设置函数体内this对象的值
-call，apply前提是运行前面的这个方法，而apply(this,[arg1,arg2...])所传参数arg1..在方法内可以获得，具体函数看函数内部用到何处
+call，apply前提是运行前面的这个方法Fn，而Fn.apply(obj,[arg1,arg2...])所传参数arg..在Fn内可以获得，具体看Fn内部用到何处
+
+
+案例：
+
+Fn 一个构造函数，内部指定this.name = arguments[0]之类
+obj = {}
+Fn.apply(obj,["csq",111,99,function(){return 1}])
+
+即使Fn没有接收参数：function Fn（）
+也可以拿到，apply来的参数，并替换this。指向obj ，给obj赋一堆属性 
+
+此时在Fn内部拿到的arguments[0]就是"csq" , 此时函数内部的this是obj
+所以 obj.name = 'csq'

@@ -80,7 +80,7 @@
 	
 	<div class="contain" style="display:none;">
 		<div class="popover-start">
-			<div class="header">磊哥猛日狼</div>
+			<div class="header">锅打灰太狼</div>
 			<ul class="content">
 				<p>敬爱的磊黑村长：</p>
 				<p style="text-indent:2cm;">灰太狼大军大举进攻我羊村，此成危急存亡之秋，好在村长大人与红太狼有一腿，凭借那夜偷来的芭蕉扇...啊不，平底锅方可降服灰太狼。锅上无眼，还袁村长切勿伤及大军中混入的小灰灰。毕竟，那可能是村长你的亲骨肉...</p>
@@ -138,7 +138,7 @@ var imgArr = [];
 var level = 1;
 var count = 0;
 var score = 0;
-var times = 180;
+var times = 90;
 
 var imgObj = {
 	wolf:'img/h.png',
@@ -314,7 +314,7 @@ canvas.onclick = function(event){
 				if(!item.dea){
 					var increment = 0;
 					item.idx < 2 && item.dir == true ? increment = 20 : increment = 10 ;
-					// item.idx < 3 && item.dir == true ? console.log("瞬杀？") : console.log('平A');
+					item.idx < 3 && item.dir == true ? console.log("瞬杀？") : console.log('平A');
 					item.name == "big" ? score += increment : score -= increment;
 					item.death();
 					scores.innerText = score;
@@ -328,9 +328,11 @@ canvas.onclick = function(event){
 
 //主函数
 function main(){
+		var sumTime = times
+		var N180 = 180
 	    timer = setInterval(function(){
 		ctx.clearRect(0,0,canvas.width,canvas.height);
-		ctx.drawImage(imgArr[2],0,0,180,16,63/320*cw,66/480*ch,times/320*cw,16/480*ch)
+		ctx.drawImage(imgArr[2],0,0,180-180*(sumTime-times)/sumTime,16,63/320*cw,66/480*ch,(180-180*(sumTime-times)/sumTime)/320*cw,16/480*ch)
 		count++;
 		if(count % 8 == 0){
 			createWolf();
@@ -346,7 +348,7 @@ function main(){
 		if(times <= 0){
 			gameOver()
 		}
-	},60)
+	},130)
 	    
 }
 
