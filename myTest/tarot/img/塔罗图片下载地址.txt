@@ -1,4 +1,4 @@
-火柴人塔罗牌：
+﻿火柴人塔罗牌：
 http://www.tarot5.cn/photo/tarot/tarot_70_4.htm
 
 月光塔罗牌：
@@ -24,3 +24,5 @@ http://www.tarot5.cn/photo/tarot/tarot_168_4.htm
 
 巫术崇拜塔罗牌
 http://www.tarot5.cn/photo/tarot/tarot_170_4.htm
+
+dev合并提交至暂存区？
