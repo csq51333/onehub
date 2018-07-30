@@ -4,13 +4,16 @@
 	<meta charset="UTF-8">
 	<title>tarot</title>
 	<style>
+		html,body{
+			height: 100%;
+		}
 		#origin{
 			position: relative;
 			width: 10px;
 			height: 10px;
 			border-radius: 10px;
 			background-color: black;
-			margin: 200px auto;
+			/*margin: 200px auto;*/
 			background-color: black;
 		}
 		.pai{
@@ -60,14 +63,17 @@
 <script src="js/main.js"></script>
 <script>
 var ogn = document.getElementById('origin')
-var ox = ogn.offsetLeft
+var cw = document.body.clientWidth;//屏幕宽度，兼容？
+var ch = document.body.clientHeight;//屏幕宽度，兼容？
+console.log(cw,ch)
+var redress = cw > ch ? ch/3 : cw/2 //矫正值，为了居中
+/*var ox = ogn.offsetLeft
 var oy = ogn.offsetTop
-
-console.log(ox,oy)
+console.log(ox,oy)*/
 function coordinate(angle){
 	var ag = angle*Math.PI/180;
 	var left = Math.sin(ag)*150
-	var top = Math.cos(ag)*150
+	var top = Math.cos(ag)*150//距离圆心的半径长
 	return {
 		x: left,
 		y: top
@@ -78,9 +84,9 @@ var pArr = document.querySelectorAll('.pai');
 var len = pArr.length;
 
 
-ogn.addEventListener('click',function(e){
+/*ogn.addEventListener('click',function(e){
 	console.log(e.target.innerHTML)
-})
+})*/
 
 function circle(){
 	for(var i=0;i<len;i++){
@@ -88,9 +94,9 @@ function circle(){
 			var ag = 360/len*i
 			var left = coordinate(ag).x;
 			var top = coordinate(ag).y
-			pArr[i].style.left = left + 'px';
-			pArr[i].style.top = top + 'px';
-			pArr[i].style.transform = 'rotate('+ -ag +'deg)'
+			pArr[i].style.left = left + redress + 'px';
+			pArr[i].style.top = top + redress + 'px';
+			pArr[i].style.transform = 'rotateZ('+ -ag +'deg)'
 			pArr[i].style.zIndex = i;
 		}(i)
 	}
@@ -102,20 +108,21 @@ function rd(min,max){
 
 function daL(){
 	for(var i = 0; i<len;i++){
-		pArr[i].style.top = rd(-100,100) + 'px';
-		pArr[i].style.left = rd(-100,100) + 'px';
-		pArr[i].style.transform = 'rotate(' + rd(-360,360) + 'deg)'
+		var _redress = angleZ(pArr[i])
+		pArr[i].style.top = rd(-200,200) + redress + 'px';
+		pArr[i].style.left = rd(-200,200) + redress + 'px';
+		pArr[i].style.transform = 'rotateZ(' + (rd(0,360) + _redress) + 'deg)'
 	}
 	xiP()
 }
 
 function heS(){
 	for(var i = 0; i<len;i++){
-		pArr[i].style.top = 0 + 'px';
-		pArr[i].style.left = 0 + 'px';
+		pArr[i].style.top = redress + 'px';
+		pArr[i].style.left = redress + 'px';
 		var ag = angleZ(pArr[i])
-		var zn = ZNWei(ag)
-		pArr[i].style.transform = 'rotate(' + zn + 'deg)'
+		var zn = HZNWei(ag)
+		pArr[i].style.transform = 'rotateZ(' + zn + 'deg)'
 	}
 }
 
@@ -126,41 +133,92 @@ function xiP(){
 	}
 	//打乱z-index
 	for(var n=0;n<len;n++){
-		pArr[n].style.zIndex = zArr.splice(rd(0,len-1),1)[0]
+		pArr[n].style.zIndex = zArr.splice(rd(0,zArr.length-1),1)[0]
 	}
 }
 
 function puK(){
 	//横向铺开以z-index为序列
+	var _w = document.body.clientWidth;
+	var cha = 0;
 	for(var i=0;i<len;i++){
-		pArr[i].style.top = 0 + 'px';
-		pArr[i].style.left = -400 + pArr[i].style.zIndex*10 + 'px';
+		var T = ch/4
+		var f = (len*30/cw)+1 //先得出能份成几份？
+		var c = parseInt(len/f) //每一份有多少？
+		pArr[i].style.top = parseInt(pArr[i].style.zIndex/c) * T + 'px';
+		pArr[i].style.left = (pArr[i].style.zIndex%c)*30 + 'px';
+		
 		var ag = angleZ(pArr[i])
-		var zn = ZNWei(ag)
-		pArr[i].style.transform = 'rotate(' + zn + 'deg)'
+		var zn = SZNWei(ag)
+		pArr[i].style.transform = 'rotateZ(' + zn + 'deg)'
+		var v = zn == 180 ? '逆' : '正'
+		pArr[i].setAttribute('wei',v)
 	}
 }
 
-function zhuan(pai){
-	reg = !reg ? -180 : 0;
-	pai.style.transform = "rotateY("+reg+"deg)"
+//递归切牌术
+function Sqie(){
+	var i = arguments[0] || 0; //记步数，这是第几次，做什么
+	var rand = arguments[1] || 0;
+	var lens = arguments[2] || len;
+	var cun = arguments[3] || null;
+
+	//操作地图
+	var map = {
+		top: [300,-300,300,-300,0],
+		run: ['fen','fen','he','he'],
+		lens:['len',]
+		cun:[]
+	}
+	if(cun){
+		map.cun.push(cun)
+	}
+
+	if(map.run[i] == 'fen'){
+		var mix = (len-rand)/3 + rand || parseInt(len/3);
+		var max = (len-rand)/3*2 + rand || parseInt(len/3*2);
+		rand = rd(mix,max)
+	}
+
+	if(map.run[i] = 'he'){
+		lens = map.cun[i] // ??? i-1? i-2? 39,65
+
+		map.cun.push(len) //为下一步要加的zIndex做准备
+	}
+
+	if(i >= 4){}
+
 	setTimeout(function(){
-		zidx = zidx == -1? 1:-1;
-		bei.style.zIndex = zidx
-	},300)
+		for(var n=0;n<lens;n++){
+			var style = pArr[n].style
+			switch(map.run[i]){
+				case 'fen':
+					if(style.zIndex >= rand){
+						style.top = map.top[i]
+						
+					}
+					break;
+				case 'he':
+					if(style.zIndex < rand){}
+					break;
+			}
+			
+		}
+		lens = map.run[i] == 'fen' ? lens - rand : map.cun[i-1] //合回的没算完
+		map.cun.push(rand)
+		arguments.callee(++i,rand,lens,map.cun)
+	},1500)
 }
+Sqie()
 
-function ZNWei(ag){
-	return (ag >= 90 && ag < 270 || ag <= -90 && ag > -270) ? 180 : 0;
-}
-
-document.addEventListener("click",function(e){
+//点击牌翻转事件，兼容？
+document.addEventListener("dblclick",function(e){
 	var el
 	if(e.target.className == 'bei' || e.target.className == 'biao'){
 		el = e.target.parentNode;
 		var b = getRoutate(el.style.transform,'Z')
 		el.reg  = !el.reg ? 180 : 0;
-		el.style.transform = "rotateY("+ el.reg +"deg) rotateZ("+ (-b) +"deg)"
+		el.style.transform = "rotateY("+ el.reg +"deg) rotateZ("+ (b%180 == 0? b:-b) +"deg)"
 		setTimeout(function(){
 			el.zinx = el.zinx == -1 ? 1 : -1;
 			el.querySelector('.bei').style.zIndex = el.zinx
