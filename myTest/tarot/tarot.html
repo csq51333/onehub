@@ -160,56 +160,75 @@ function puK(){
 function Sqie(){
 	var i = arguments[0] || 0; //记步数，这是第几次，做什么
 	var rand = arguments[1] || 0;
-	var lens = arguments[2] || len;
-	var cun = arguments[3] || null;
+	var cun = arguments[2] || null;
+	var _this = arguments.callee;
+	var lens = len;
+	var x = 0;
+
+	if(i >= 5){
+		return
+	}
 
 	//操作地图
 	var map = {
-		top: [300,-300,300,-300,0],
-		run: ['fen','fen','he','he'],
-		lens:['len',]
-		cun:[]
+		top: [50,-50,50,-50,0],
+		run: ['fen','fen','he','he','zo'],
+		cun:[0]
 	}
 	if(cun){
-		map.cun.push(cun)
+		map.cun = cun
 	}
 
 	if(map.run[i] == 'fen'){
 		var mix = (len-rand)/3 + rand || parseInt(len/3);
 		var max = (len-rand)/3*2 + rand || parseInt(len/3*2);
 		rand = rd(mix,max)
-	}
-
-	if(map.run[i] = 'he'){
-		lens = map.cun[i] // ??? i-1? i-2? 39,65
-
-		map.cun.push(len) //为下一步要加的zIndex做准备
-	}
-
-	if(i >= 4){}
-
-	setTimeout(function(){
-		for(var n=0;n<lens;n++){
-			var style = pArr[n].style
-			switch(map.run[i]){
-				case 'fen':
-					if(style.zIndex >= rand){
-						style.top = map.top[i]
-						
-					}
-					break;
-				case 'he':
-					if(style.zIndex < rand){}
-					break;
-			}
-			
-		}
-		lens = map.run[i] == 'fen' ? lens - rand : map.cun[i-1] //合回的没算完
 		map.cun.push(rand)
-		arguments.callee(++i,rand,lens,map.cun)
-	},1500)
+	}
+
+	if(map.run[i] == 'he'){
+		x = i==3 ? map.cun[3] - map.cun[2] : len*2 - map.cun[1]
+		var start = map.cun[i-2]
+		rand = map.cun[i-1];
+	}
+
+	if(map.run[i] == 'zo'){
+		rand = map.cun[2];
+		lens = len;
+	}
+	
+	setTimeout(function(){
+		if(i <= 4){
+			for(var n=0;n<lens;n++){
+				var style = pArr[n].style
+				switch(map.run[i]){
+					case 'fen':
+						if(style.zIndex >= rand){
+							style.top = map.top[i] + redress + 'px'
+						}
+						break;
+					case 'he':
+						if(style.zIndex >= start && style.zIndex < rand || (i==3&&style.zIndex >= map.cun[i])){
+							if(style.zIndex >= start && style.zIndex < rand){
+								style.zIndex = parseInt(style.zIndex) + x;
+							}
+							style.top = map.top[i] + redress + 'px'
+						}
+						break;
+					case 'zo':
+						// style.zIndex -= map.cun[2]; // zIndex对铺开效果有影响，所以复位
+						style.top = redress + 'px'
+				}
+				
+			}
+
+			if(map.run[i] == 'he'){
+				map.cun.push(x)
+			}
+			_this(++i,rand,map.cun)
+		}
+	},1000)
 }
-Sqie()
 
 //点击牌翻转事件，兼容？
 document.addEventListener("dblclick",function(e){
