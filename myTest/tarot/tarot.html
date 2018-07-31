@@ -14,7 +14,6 @@
 			border-radius: 10px;
 			background-color: black;
 			/*margin: 200px auto;*/
-			background-color: black;
 		}
 		.pai{
 			width: 10vw;
@@ -55,21 +54,19 @@
 	</style>
 </head>
 <body>
+	<div id="cap"></div>
+	<div id="collect"></div>
 	<div id="origin">
 
 	</div>
 </body>
 <script src="js/common.js"></script>
 <script src="js/main.js"></script>
+<script src="js/contorl.js"></script>
 <script>
 var ogn = document.getElementById('origin')
-var cw = document.body.clientWidth;//屏幕宽度，兼容？
-var ch = document.body.clientHeight;//屏幕宽度，兼容？
-console.log(cw,ch)
-var redress = cw > ch ? ch/3 : cw/2 //矫正值，为了居中
-/*var ox = ogn.offsetLeft
-var oy = ogn.offsetTop
-console.log(ox,oy)*/
+
+
 function coordinate(angle){
 	var ag = angle*Math.PI/180;
 	var left = Math.sin(ag)*150
@@ -80,155 +77,9 @@ function coordinate(angle){
 	}
 }
 
-var pArr = document.querySelectorAll('.pai');
-var len = pArr.length;
-
-
 /*ogn.addEventListener('click',function(e){
 	console.log(e.target.innerHTML)
 })*/
-
-function circle(){
-	for(var i=0;i<len;i++){
-		!function(i){
-			var ag = 360/len*i
-			var left = coordinate(ag).x;
-			var top = coordinate(ag).y
-			pArr[i].style.left = left + redress + 'px';
-			pArr[i].style.top = top + redress + 'px';
-			pArr[i].style.transform = 'rotateZ('+ -ag +'deg)'
-			pArr[i].style.zIndex = i;
-		}(i)
-	}
-}
-
-function rd(min,max){
-	return Math.round(Math.random()*(max-min)+min)
-}
-
-function daL(){
-	for(var i = 0; i<len;i++){
-		var _redress = angleZ(pArr[i])
-		pArr[i].style.top = rd(-200,200) + redress + 'px';
-		pArr[i].style.left = rd(-200,200) + redress + 'px';
-		pArr[i].style.transform = 'rotateZ(' + (rd(0,360) + _redress) + 'deg)'
-	}
-	xiP()
-}
-
-function heS(){
-	for(var i = 0; i<len;i++){
-		pArr[i].style.top = redress + 'px';
-		pArr[i].style.left = redress + 'px';
-		var ag = angleZ(pArr[i])
-		var zn = HZNWei(ag)
-		pArr[i].style.transform = 'rotateZ(' + zn + 'deg)'
-	}
-}
-
-function xiP(){
-	var zArr = []
-	for(var i=0;i<len;i++){
-		zArr.push(i);
-	}
-	//打乱z-index
-	for(var n=0;n<len;n++){
-		pArr[n].style.zIndex = zArr.splice(rd(0,zArr.length-1),1)[0]
-	}
-}
-
-function puK(){
-	//横向铺开以z-index为序列
-	var _w = document.body.clientWidth;
-	var cha = 0;
-	for(var i=0;i<len;i++){
-		var T = ch/4
-		var f = (len*30/cw)+1 //先得出能份成几份？
-		var c = parseInt(len/f) //每一份有多少？
-		pArr[i].style.top = parseInt(pArr[i].style.zIndex/c) * T + 'px';
-		pArr[i].style.left = (pArr[i].style.zIndex%c)*30 + 'px';
-		
-		var ag = angleZ(pArr[i])
-		var zn = SZNWei(ag)
-		pArr[i].style.transform = 'rotateZ(' + zn + 'deg)'
-		var v = zn == 180 ? '逆' : '正'
-		pArr[i].setAttribute('wei',v)
-	}
-}
-
-//递归切牌术
-function Sqie(){
-	var i = arguments[0] || 0; //记步数，这是第几次，做什么
-	var rand = arguments[1] || 0;
-	var cun = arguments[2] || null;
-	var _this = arguments.callee;
-	var lens = len;
-	var x = 0;
-
-	if(i >= 5){
-		return
-	}
-
-	//操作地图
-	var map = {
-		top: [50,-50,50,-50,0],
-		run: ['fen','fen','he','he','zo'],
-		cun:[0]
-	}
-	if(cun){
-		map.cun = cun
-	}
-
-	if(map.run[i] == 'fen'){
-		var mix = (len-rand)/3 + rand || parseInt(len/3);
-		var max = (len-rand)/3*2 + rand || parseInt(len/3*2);
-		rand = rd(mix,max)
-		map.cun.push(rand)
-	}
-
-	if(map.run[i] == 'he'){
-		x = i==3 ? map.cun[3] - map.cun[2] : len*2 - map.cun[1]
-		var start = map.cun[i-2]
-		rand = map.cun[i-1];
-	}
-
-	if(map.run[i] == 'zo'){
-		rand = map.cun[2];
-		lens = len;
-	}
-	
-	setTimeout(function(){
-		if(i <= 4){
-			for(var n=0;n<lens;n++){
-				var style = pArr[n].style
-				switch(map.run[i]){
-					case 'fen':
-						if(style.zIndex >= rand){
-							style.top = map.top[i] + redress + 'px'
-						}
-						break;
-					case 'he':
-						if(style.zIndex >= start && style.zIndex < rand || (i==3&&style.zIndex >= map.cun[i])){
-							if(style.zIndex >= start && style.zIndex < rand){
-								style.zIndex = parseInt(style.zIndex) + x;
-							}
-							style.top = map.top[i] + redress + 'px'
-						}
-						break;
-					case 'zo':
-						// style.zIndex -= map.cun[2]; // zIndex对铺开效果有影响，所以复位
-						style.top = redress + 'px'
-				}
-				
-			}
-
-			if(map.run[i] == 'he'){
-				map.cun.push(x)
-			}
-			_this(++i,rand,map.cun)
-		}
-	},1000)
-}
 
 //点击牌翻转事件，兼容？
 document.addEventListener("dblclick",function(e){
@@ -244,7 +95,6 @@ document.addEventListener("dblclick",function(e){
 		},300)
 	}
 	console.log(el)
-})
-
+});
 </script>
 </html>

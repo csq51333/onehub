@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>牌阵页</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.zhen{
+			position: relative;
+		}
+		.box{
+			position: absolute;
+			width: 100px;
+		}
+		.wei{
+			width: 100px;
+			height: 180px;
+			border-radius: 5px;
+			border:1px dotted black;
+			text-align: center;
+			line-height: 300px;
+		}
+		.caption{
+			width: 100%;
+			background-color: cyan;
+			height: 20px;
+			line-height: 20px;
+			text-align: center;
+			font-size: 15px;
+			color: white;
+			margin-top: 5px;
+		}
+	</style>
+</head>
+<body>
+	<div class="zhen">
+		<div class="box">
+			<div class="wei">第一张</div>
+			<p class="caption">1.现状</p>
+		</div>
+		<div class="box">
+			<div class="wei">第二章</div>
+			<p class="caption">2.问题</p>
+		</div>
+		<div class="box">
+			<div class="wei">第三章</div>
+			<p class="caption">3.结果</p>
+		</div>
+	</div>
+</body>
+<script>
+var zhen = document.querySelector('.zhen');
+var cap = document.querySelectorAll('.caption')
+zhen.addEventListener('click',function(e){
+	if(e.target.className = 'caption'){
+		console.log(this.querySelector('.wei').innerHTML)
+	}
+	//没有index只会抓第一个
+	// if(e.target.innerHTML = '3.结果'){
+	// 	console.log(this.querySelector('.wei').innerHTML)
+	// }
+})
+
+cap[2].addEventListener('click',function(){
+	console.log(this.parentNode.querySelector('.wei').innerHTML)
+})
+</script>
+</html>
