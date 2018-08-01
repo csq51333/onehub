@@ -18,28 +18,13 @@
 			//生成78，56，22？
 			var i = obj.total != 56? 0 : 23;
 			var len = obj.total != 56? obj.total : obj.total + 23
+			var ogn = document.getElementById('origin');
+			var kind = obj.kind
 			for(i;i<obj.total;i++){
-				var div = document.createElement('div')
-				var divb = document.createElement('div')
-				var divbg = document.createElement('div')
-
-				div.className = 'pai';
-				div.zinx = 1;
-				div.num = i;
-				div.reg = 0;
-				div.setAttribute('No.',i)
-				div.setAttribute('wei',"")
-
-				divb.className = 'biao'
-				divb.style.backgroundImage = 'url("img/'+obj.kind+i+'.jpg")'
-
-				divbg.className = 'bei'
-				div.appendChild(divb)
-				div.appendChild(divbg)
-				document.getElementById('origin').appendChild(div)
+				createPai(ogn,i,'positive',kind)
 			}
 
-			this.pArr = [].slice.call(document.querySelectorAll('.pai'));
+			this.pArr = [].slice.call(document.querySelectorAll('.pai'))
 			this.len = this.pArr.length
 		}
 	}

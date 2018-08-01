@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="css/globle.css">
 	<title>牌阵页</title>
 	<style>
 		*{
@@ -14,6 +15,8 @@
 		.box{
 			position: absolute;
 			width: 100px;
+			display: flex;
+			align-items: center;
 		}
 		.wei{
 			width: 100px;
@@ -37,26 +40,16 @@
 </head>
 <body>
 	<div class="zhen">
-		<div class="box">
-			<div class="wei">第一张</div>
-			<p class="caption">1.现状</p>
-		</div>
-		<div class="box">
-			<div class="wei">第二章</div>
-			<p class="caption">2.问题</p>
-		</div>
-		<div class="box">
-			<div class="wei">第三章</div>
-			<p class="caption">3.结果</p>
-		</div>
 	</div>
 </body>
+<script src="js/common.js"></script>
+<script src="js/TarotArray.js"></script>
 <script>
 var zhen = document.querySelector('.zhen');
 var cap = document.querySelectorAll('.caption')
 zhen.addEventListener('click',function(e){
 	if(e.target.className = 'caption'){
-		console.log(this.querySelector('.wei').innerHTML)
+		console.log(this.querySelector('.pai').innerHTML)
 	}
 	//没有index只会抓第一个
 	// if(e.target.innerHTML = '3.结果'){

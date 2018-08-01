@@ -2,10 +2,15 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="css/globle.css">
 	<title>tarot</title>
 	<style>
 		html,body{
 			height: 100%;
+		}
+		@keyframes circle{
+			to{transform: 0deg}
+			from{transform: 360deg}
 		}
 		#origin{
 			position: relative;
@@ -15,71 +20,106 @@
 			background-color: black;
 			/*margin: 200px auto;*/
 		}
-		.pai{
+		#collect{
+			background-color: gray;
+			/*position: relative;
+			display: flex;*/
+		}
+		#collect > *{
 			width: 10vw;
 			height: 17vw;
-			position: absolute;
-			top: 0px;
-			left: 0px;
-			box-sizing: border-box;
-			border: 2px solid yellow;
-			background-color: orange;
-			transition: 1s;
-			transform-origin: 5vw vw;
-			background-image: url('img/waite/1.jpg');
-			background-size: cover;
-			background-repeat: no-repeat;
-		}
-		.pai:hover{
-			background-color: cyan;
-		}
-		.biao{
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			transform: rotateY(-180deg);
-			background-image: url('img/waite/3.jpg');
+			float: left;
+			margin: 10px 10px;
+			border: 1px dotted black;
+			border-radius: 5px;
 			-webkit-background-size: cover;
 			background-size: cover;
 		}
-		.bei{
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			-webkit-background-size: contain;
-			background-size: contain;
-			background-position: 0 11.5px;
-			background-image: url('img/waite/b.jpg');
+		.clearfix:after{
+			display: block;
+			clear: both;
+			content: '';
 		}
 	</style>
 </head>
 <body>
-	<div id="cap"></div>
-	<div id="collect"></div>
-	<div id="origin">
-
-	</div>
+	<div id="remark"></div>
+	<div id="collect" class="clearfix"></div>
+	<div id="origin"></div>
 </body>
 <script src="js/common.js"></script>
 <script src="js/main.js"></script>
 <script src="js/contorl.js"></script>
 <script>
 var ogn = document.getElementById('origin')
+var clt = document.getElementById('collect')
 
-
-function coordinate(angle){
-	var ag = angle*Math.PI/180;
-	var left = Math.sin(ag)*150
-	var top = Math.cos(ag)*150//距离圆心的半径长
-	return {
-		x: left,
-		y: top
+function createClt(){
+	var lens = 10
+	for(var i=0;i<lens;i++){
+		var div = document.createElement('div')
+		div.className = 'clt-item'
+		clt.appendChild(div);
 	}
 }
 
-/*ogn.addEventListener('click',function(e){
-	console.log(e.target.innerHTML)
-})*/
+createClt()
+var items = document.querySelectorAll('.clt-item');
+
+var handle = (function(){
+	var i = 0;
+	return function(e){
+		var el,et = e.target;
+		if((et.className == 'bei' || et.className == 'biao') && i < 10){
+			el = et.parentNode
+			if(el.getAttribute('wei')){
+				var v = el.getAttribute('wei')
+				var n = el.getAttribute('no.')
+				items[i].setAttribute('wei',v);
+				items[i].setAttribute("No.",n)
+				items[i].style.transform = 'rotate(' + (v == '正' ? 0: 180) + 'deg)'
+				if(1){
+					items[i].style.backgroundImage = el.querySelector('.biao').style.backgroundImage;
+				}else{
+					items[i].style.backgroundImage = "url(./img/waite/b.jpg)";
+				}
+				items[i].numbers = n;
+				el.style.display = 'none';
+				i++;
+			}
+		}
+	}
+})()
+
+document.addEventListener('click',handle)
+
+function collect(){
+	var obj = []
+	for(var i=0;i<items.length;i++){
+		obj[i] = {};
+		obj[i].direction = items[i].getAttribute('wei') == "正" ? 'positive' : 'reverse'
+		obj[i].No = items[i].numbers
+	}
+	return JSON.stringify(obj)
+}
+
+function redirect(){
+	window.location = './TarotArray.html?data='+collect()+'&formation=kerte'
+}
+
+
+
+
+
+
+
+
+
+
+
+//index递增值，选满跳转/按钮跳转？，跳转前收集
+
+
 
 //点击牌翻转事件，兼容？
 document.addEventListener("dblclick",function(e){

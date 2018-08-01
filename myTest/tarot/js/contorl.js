@@ -66,7 +66,7 @@ function puK(){
 	var _w = document.body.clientWidth;
 	var cha = 0;
 	for(var i=0;i<len;i++){
-		var T = ch/4 //将屏幕高度分成四份，决定每行上下间距
+		var T = ch/8 //将屏幕高度分成四份，决定每行上下间距
 		var f = (len*30/cw)+1 //以左右间距30铺开，得出能份成几行
 		var c = parseInt(len/f) //每一行有多少张？
 		pArr[i].style.top = parseInt(pArr[i].style.zIndex/c) * T + 'px';
@@ -74,9 +74,9 @@ function puK(){
 		
 		var ag = angleZ(pArr[i])
 		var zn = ZNWei(ag,'s')
-		pArr[i].style.transform = 'rotateZ(' + zn + 'deg)'
-		var v = zn == 180 ? '逆' : '正'
-		pArr[i].setAttribute('wei',v)
+		// pArr[i].style.transform = 'rotateZ(' + zn + 'deg)'
+		pArr[i].setAttribute('wei',(zn == 180 ? '逆' : '正'))
+		pArr[i].wei = (zn == 180 ? '逆' : '正')
 	}
 }
 
@@ -84,7 +84,7 @@ function puK(){
 function Sqie(){
 	var i = arguments[0] || 0;  //记步数，这是第几次递归
 	var rand = arguments[1] || 0;  // 切三叠拍，每叠随机数
-	var cun = arguments[2] || null; // 存之前切好的，每叠随机数
+	var cun = arguments[2] || null; // 存之前切好的：每叠的随机数
 	var _this = arguments.callee;
 	var lens = len;
 	var x = 0;
@@ -158,6 +158,7 @@ function Sqie(){
 // 自动洗牌一套动作集合，传参洗几遍，默认3次
 var process = function(n){
 	var lens = n || 3
+	// document.getElementById('origin').style.animation = "circle "+i+"s linear"
 	for(var i=0;i<lens;i++){
 		setTimeout(function(){
 			xiP()
@@ -175,7 +176,7 @@ function next(){
 	console.log('show self or other?')
 	for(var i=0;i<len;i++){
 		var _redress = getRoutate(pArr[i].style.transform,'Z');
-		var _ag = (90 + _redress) % 360; // 为自己占卜加90度 ，为他人占卜减90度
+		var _ag = (90 + _redress) // 为自己占卜加90度 ，为他人占卜减90度,90从首页信息选择来还是按钮选择？
 		pArr[i].style.transform = 'rotateZ(' + _ag + 'deg)'
 	}
 

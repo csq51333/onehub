@@ -1,21 +1,99 @@
 (function(){
-	var tar = {
-		init:{
-			this.crea
+	var Tarr = {
+		data:{},
+		init:function(){
+			var obj = getParmas()
+			console.log(obj)
+			this.data = obj
+			this.create()
+		},
+		create:function(){
+			var formation = this.data.formation
+			var data = this.data.data
+
+
+			for(var i=0;i<data.length;i++){
+				var Arrays = this[formation][i];
+
+				var box = document.createElement("div");
+				box.className = 'box'
+				box.style.top = Arrays.y + 'px'
+				box.style.left = Arrays.x + 'px'
+				box.style.transform = 'rotate('+ Arrays.ag +'deg)'
+
+				createPai(box, data[i].No, data[i].direction)
+
+				var p = document.createElement('p');
+				p.className = 'caption';
+				p.innerHTML = Arrays.conte
+				box.appendChild(p);
+				document.querySelector('.zhen').appendChild(box)
+			}
 		},
 		kerte:{
-			0:[100,100,0],
-			1:[100,100,90],
-			2:[0,100,0],
-			3:[200,100,0],
-			4:[100,0,0],
-			5:[100,200,0],
-			6:[300,300,0],
-			7:[200,300,0],
-			8:[100,300,0],
-			9:[0,300,0]
+			0:{
+				y:100,
+				x:100,
+				ag:0,
+				conte: "现状",
+			},
+			1:{
+				y:155,
+				x:90,
+				ag:90,
+				conte: "障碍",
+			},
+			2:{
+				y:0,
+				x:100,
+				ag:0,
+				conte: "理想",
+			},
+			3:{
+				y:200,
+				x:100,
+				ag:0,
+				conte: "基础",
+			},
+			4:{
+				y:100,
+				x:0,
+				ag:0,
+				conte: "不久",
+			},
+			5:{
+				y:100,
+				x:200,
+				ag:0,
+				conte: "将来",
+			},
+			6:{
+				y:300,
+				x:300,
+				ag:30,
+				conte: "自我",
+			},
+			7:{
+				y:200,
+				x:300,
+				ag:30,
+				conte: "环境",
+			},
+			8:{
+				y:100,
+				x:300,
+				ag:30,
+				conte: "预期",
+			},
+			9:{
+				y:0,
+				x:300,
+				ag:30,
+				conte: "结果",
+			},
+			type: "全性质"
 		}
-	}
 
-	tar.init()
+	}
+	Tarr.init()
 })()
