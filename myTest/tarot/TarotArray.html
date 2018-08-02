@@ -5,60 +5,109 @@
 	<link rel="stylesheet" href="css/globle.css">
 	<title>牌阵页</title>
 	<style>
-		*{
-			margin: 0;
-			padding: 0;
+		
+		.hearder{
+			text-align: center;
+			height: 5rem;
+			background-color: black;
+			color: white;
+			margin-bottom: 20px
+		}
+		.hearder:hover .remarks{
+			display: block;
+		}
+		.current{
+			height: 100%;
+			line-height: 5rem;
 		}
 		.zhen{
+			width: 60%;
 			position: relative;
+			margin:20px auto;
 		}
 		.box{
 			position: absolute;
-			width: 100px;
+			width: 5rem;
+			height: 10rem;
 			display: flex;
 			align-items: center;
-		}
-		.wei{
-			width: 100px;
-			height: 180px;
-			border-radius: 5px;
-			border:1px dotted black;
-			text-align: center;
-			line-height: 300px;
 		}
 		.caption{
 			width: 100%;
 			background-color: cyan;
-			height: 20px;
+			height: 1.5rem;
 			line-height: 20px;
 			text-align: center;
-			font-size: 15px;
+			font-size: 1rem;
 			color: white;
-			margin-top: 5px;
+			position: absolute;
+			bottom: 0;
 		}
+		.remarks{
+			width: 40%;
+			padding: 0.5rem;
+			background-color: yellow;
+			display: none;
+		}
+		.mark{
+			border: 1px solid orange;
+			border-radius: 5px;
+			margin: 10px;
+		}
+		.mark>p>span{color: red}
 	</style>
 </head>
 <body>
-	<div class="zhen">
+	<div class="wrap">
+		<div class="hearder">
+			<div class="current">按照顺序点击</div>
+			<ul class="remarks"></ul>
+		</div>
+		<div class="zhen"></div>
 	</div>
 </body>
 <script src="js/common.js"></script>
 <script src="js/TarotArray.js"></script>
 <script>
-var zhen = document.querySelector('.zhen');
+var zhen = document.querySelector('.zhen')
 var cap = document.querySelectorAll('.caption')
-zhen.addEventListener('click',function(e){
-	if(e.target.className = 'caption'){
-		console.log(this.querySelector('.pai').innerHTML)
-	}
-	//没有index只会抓第一个
-	// if(e.target.innerHTML = '3.结果'){
-	// 	console.log(this.querySelector('.wei').innerHTML)
-	// }
-})
+var current = document.querySelector('.current')
+var markBox = document.querySelector('.remarks')
 
-cap[2].addEventListener('click',function(){
-	console.log(this.parentNode.querySelector('.wei').innerHTML)
-})
+function createMark(i){
+	current.innerHTML = "当前index值为"+ i +" 另赋提示：xxxx"
+	var li = document.createElement('li');
+	li.className = "mark";
+	li.innerHTML = "<p>现状</p><p>xxxxxxxxxxxxxxxx</p><p>xxxxxx<sapn>xxxx</span>xxxxxx</p>";
+	markBox.appendChild(li)
+}
+
+var handle = (function(){
+	var i = 0;
+	return function(e){
+			if(e.target.className == "box"){
+				
+				console.log("order = "+index)
+			}
+			if(e.target.className == 'bei'){
+				var el = e.target.parentNode
+				var index = e.target.parentNode.parentNode.attributes.order.value
+				if(i == parseInt(index)){
+					var ag = getRoutate(el.style.transform,'Z')
+					el.style.transform = "rotateZ("+ ag +"deg) rotateY(180deg)"
+					createMark(i)
+					i++
+					setTimeout(function(){
+						el.removeChild(e.target)
+					},300)
+				} else {
+					alert("弹框：提示打开顺序")
+				}
+				
+			}
+		}
+})()
+
+zhen.addEventListener('click',handle)
 </script>
 </html>

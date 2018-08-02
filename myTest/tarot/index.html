@@ -2,69 +2,89 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>tarot</title>
+	<title>首页</title>
 	<style>
-		body{
-			background-color: cyan;
-			/*transform-style: preserve-3d;*/
-			/*animation: rote 10s infinite;*/
+		.colls{
+			margin: 20px auto;
+			border: 1px dotted black;
+			border-radius: 10px;
+			padding: 10px;
+			width: 40rem;
+			background-color: gray;
+			list-style: none;
 		}
-		@keyframes rote{
-			from {transform: rotateY(0deg);}
-			to {transform: rotateY(360deg);}
+		.item{
+			height: 2rem;
+			line-height: 2rem;
+			margin: 10px 0;
+			background-color: black;
+			display: flex;
+			padding: .5rem;
+			justify-content: space-between;
+			border-radius: 5px;
+			color: white;
 		}
-		.gongpai{
-			width: 200px;
-			height: 361px;
-			top: 200px;
-			left: 500px;
-			position: absolute;
-			transition: 1s;
-			transform: rotateY(0deg);
-			-webkit-background-size: cover;
-			background-size: cover;
-		}
-		.biao{
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			transform: rotateY(-180deg);
-			background-image: url('img/waite/3.jpg');
-		}
-		.bei{
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			-webkit-background-size: contain;
-			background-size: contain;
-			background-position: 0 11.5px;
-			background-image: url('img/waite/b.jpg');
+		.go{
+			width: 2.5rem;
+			height: 2.5rem;
+			line-height: 2rem;
+			border-radius: 50%;
+			background-color: black;
+			color: white;
+			margin: 0 auto;
+			text-align: center;
 		}
 	</style>
 </head>
 <body>
-	<div class="gongpai pai">
-		<div class="biao"></div>
-		<div class="bei"></div>
-	</div>
+	<ul class="colls">
+		<li class="item">
+			<label for="">选牌：</label>
+			<select class="kind" id="">
+				<option value="waite">韦特塔罗</option>
+				<option value="alchemy">炼金术师塔罗</option>
+				<option value="hhh">火柴人塔罗</option>
+			</select>
+		</li>
+		<li class="item">
+			<label for="">选测：</label>
+			<select class="ce" id="">
+				<option value="health">健康</option>
+				<option value="work">工作</option>
+				<option value="love">爱情</option>
+				<option value="renj">人际</option>
+			</select>
+		</li>
+		<li class="item">
+			<label for="">选阵：</label>
+			<select class="zhen" id="">
+				<option value="kerte">凯尔特十字</option>
+				<option value="sanj">圣三角</option>
+				<option value="suol">所罗门</option>
+			</select>
+		</li>
+		<li class="item">
+			<label for="">选数：</label>
+			<select class="num" id="">
+				<option value="78">78张全部</option>
+				<option value="22">22张大阿卡纳</option>
+				<option value="56">56张小阿卡纳</option>
+			</select>
+		</li>
+		<div class="go">go</div>
+	</ul>
 </body>
 <script>
-var pai = document.querySelector('.pai')
-var bei = document.querySelector('.bei')
-var reg;
-pai.zidx = 1;
-function zhuan(){
-	reg = !reg ? -180 : 0;
-	pai.style.transform = "rotateY("+reg+"deg)"
-	setTimeout(function(){
-		pai.zidx = pai.zidx == -1? 1:-1;
-		bei.style.zIndex = pai.zidx
-	},300)
-}
-window.onresize = function(){
-	console.log(window)
-	console.log(document.body.clientWidth)
+var go = document.querySelector('.go')
+var ki = document.querySelector('.kind')
+var ce = document.querySelector('.ce')
+var zh = document.querySelector('.zhen')
+var nu = document.querySelector('.num')
+
+go.onclick = function(){
+	var str = "?nature="+ce.value+"&formation="+zh.value+"&total="+nu.value+"&kind=" + ki.value
+	console.log(str)
+	window.location = './tarot.html'+str
 }
 </script>
 </html>

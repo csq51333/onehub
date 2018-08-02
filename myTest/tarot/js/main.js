@@ -3,6 +3,7 @@
 		init:function(){
 			// 多少张total，牌阵formation，测类型nature,牌类型kind
 			var obj = getParmas()
+			console.log(obj)
 			obj = {
 				total:78,
 				formation:'凯尔特十字',

@@ -1,17 +1,28 @@
+*{
+	margin: 0;
+	padding: 0;
+	list-style:none;
+}
+html,body{
+	height: 100%;
+}
+@keyframes circle{
+	to{transform: 0deg}
+	from{transform: 360deg}
+}
 .pai{
-	width: 10vw;
-	height: 16vw;
+	width: 5rem;
+	height: 8.6rem;
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	box-sizing: border-box;
-	border: 2px solid yellow;
+	border:1px solid transparent;
+	border-radius: 5px;
 	background-color: orange;
 	transition: 1s;
 	/*transform-origin: 5vw 8vw;*/
 	/*background-image: url('img/waite/1.jpg');*/
-	background-size: cover;
-	background-repeat: no-repeat;
 }
 .biao{
 	width: 100%;
@@ -19,8 +30,9 @@
 	position: absolute;
 	transform: rotateY(-180deg);
 	/*background-image: url('img/waite/3.jpg');*/
-	-webkit-background-size: cover;
-	background-size: cover;
+	-webkit-background-size: contain;
+	background-size: contain;
+	background-repeat: no-repeat;
 }
 .bei{
 	width: 100%;
@@ -28,6 +40,31 @@
 	position: absolute;
 	/*background-position: 0 11.5px;*/
 	background-image: url('../img/waite/b.jpg');
-	-webkit-background-size: cover;
-	background-size: cover;
+	-webkit-background-size: contain;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.clearfix:after{
+	display: block;
+	clear: both;
+	content: '';
+}
+
+@media only screen and (min-width: 768px){
+	html{
+		font-size: 15px;
+	}
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	html{
+		font-size: 12px;
+	}
+}
+
+@media only screen (min-width: 100px) and (max-width: 479px){
+	html{
+		font-size: 11px;
+	}
 }

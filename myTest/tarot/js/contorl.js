@@ -1,5 +1,5 @@
-var cw = document.body.clientWidth;//屏幕宽度，兼容？
-var ch = document.body.clientHeight;//屏幕宽度，兼容？
+var cw = document.body.clientWidth;//屏幕宽度，兼容不写
+var ch = document.body.clientHeight;//屏幕宽度，懒得管兼容
 var redress = cw > ch ? ch/3 : cw/2 //矫正值，为了居中
 
 var pArr = document.querySelectorAll('.pai');
@@ -8,6 +8,17 @@ var len = pArr.length;
 //随机函数
 function rd(min,max){
 	return Math.round(Math.random()*(max-min)+min)
+}
+
+// 返回一个圆圈坐标
+function coordinate(angle){
+	var ag = angle*Math.PI/180;
+	var left = Math.sin(ag)*150
+	var top = Math.cos(ag)*150//距离圆心的半径长
+	return {
+		x: left,
+		y: top
+	}
 }
 
 //初始以一个圆圈摆放牌

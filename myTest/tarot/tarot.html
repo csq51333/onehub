@@ -5,13 +5,6 @@
 	<link rel="stylesheet" href="css/globle.css">
 	<title>tarot</title>
 	<style>
-		html,body{
-			height: 100%;
-		}
-		@keyframes circle{
-			to{transform: 0deg}
-			from{transform: 360deg}
-		}
 		#origin{
 			position: relative;
 			width: 10px;
@@ -20,14 +13,28 @@
 			background-color: black;
 			/*margin: 200px auto;*/
 		}
+		#origin .start{
+			width: 5rem;
+			height: 3rem;
+			position: absolute;
+			background-color: black;
+			color: white;
+			display: inline-block;
+			border-radius: .5rem;
+			outline: none;
+			transition: 6s;
+		}
+		#origin .start:active{
+			background-color: greenyellow;
+		}
 		#collect{
 			background-color: gray;
 			/*position: relative;
 			display: flex;*/
 		}
 		#collect > *{
-			width: 10vw;
-			height: 17vw;
+			width: 5rem;
+			height: 8.7rem;
 			float: left;
 			margin: 10px 10px;
 			border: 1px dotted black;
@@ -35,17 +42,16 @@
 			-webkit-background-size: cover;
 			background-size: cover;
 		}
-		.clearfix:after{
-			display: block;
-			clear: both;
-			content: '';
-		}
+		
 	</style>
 </head>
 <body>
 	<div id="remark"></div>
 	<div id="collect" class="clearfix"></div>
-	<div id="origin"></div>
+	<div id="origin">
+		<button class="start">开始</button>
+	</div>
+
 </body>
 <script src="js/common.js"></script>
 <script src="js/main.js"></script>
@@ -53,18 +59,24 @@
 <script>
 var ogn = document.getElementById('origin')
 var clt = document.getElementById('collect')
+var start = document.querySelector('.start')
 
 function createClt(){
-	var lens = 10
+	var lens = 10 // 本页面中的10为，收集页传入的牌阵
 	for(var i=0;i<lens;i++){
 		var div = document.createElement('div')
 		div.className = 'clt-item'
 		clt.appendChild(div);
 	}
+	start.style.top = redress + start.offsetHeight + "px"
+	start.style.left = redress + "px"
 }
 
 createClt()
 var items = document.querySelectorAll('.clt-item');
+
+//摆盘。。。。
+circle()
 
 var handle = (function(){
 	var i = 0;
@@ -77,7 +89,7 @@ var handle = (function(){
 				var n = el.getAttribute('no.')
 				items[i].setAttribute('wei',v);
 				items[i].setAttribute("No.",n)
-				items[i].style.transform = 'rotate(' + (v == '正' ? 0: 180) + 'deg)'
+				items[i].style.transform = 'rotateZ(' + (v == '正' ? 0: 180) + 'deg)'
 				if(1){
 					items[i].style.backgroundImage = el.querySelector('.biao').style.backgroundImage;
 				}else{
@@ -86,6 +98,10 @@ var handle = (function(){
 				items[i].numbers = n;
 				el.style.display = 'none';
 				i++;
+				if(i == 10){
+					document.removeEventListener('click',handle)
+					redirect()
+				}
 			}
 		}
 	}
@@ -107,6 +123,24 @@ function redirect(){
 	window.location = './TarotArray.html?data='+collect()+'&formation=kerte'
 }
 
+var timer = null;
+var idx = 0;
+
+start.onmousedown = function(){
+	timer = setInterval(function(){
+		idx++
+		console.log(idx)
+	},1000)
+}
+start.onmouseup = function(){
+	clearInterval(timer)
+	if(idx>4){
+		process(idx%4)
+		start.style.display = "none"
+	}else{
+		idx = 0;
+	}
+}
 
 
 
@@ -133,8 +167,8 @@ document.addEventListener("dblclick",function(e){
 			el.zinx = el.zinx == -1 ? 1 : -1;
 			el.querySelector('.bei').style.zIndex = el.zinx
 		},300)
+		console.log(el)
 	}
-	console.log(el)
 });
 </script>
 </html>
