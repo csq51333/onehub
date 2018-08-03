@@ -46,13 +46,22 @@
 		.remarks{
 			width: 40%;
 			padding: 0.5rem;
-			background-color: yellow;
+			background-color: blue;
 			display: none;
 		}
 		.mark{
 			border: 1px solid orange;
 			border-radius: 5px;
 			margin: 10px;
+		}
+		.mark>h2{
+			text-align: center;
+		}
+		.mark>p{
+			text-align: left;
+			text-indent: 2em;
+			word-wrap:break-word;
+			/*white-space: wrap*/
 		}
 		.mark>p>span{color: red}
 	</style>
@@ -73,17 +82,27 @@ var zhen = document.querySelector('.zhen')
 var cap = document.querySelectorAll('.caption')
 var current = document.querySelector('.current')
 var markBox = document.querySelector('.remarks')
+var mes = getParmas() // 信息
 
-function createMark(i){
-	current.innerHTML = "当前index值为"+ i +" 另赋提示：xxxx"
+//解析展示栏 -> 调用解析对象，具体标签由nature决定
+//渲染到li中，我在犹豫要不要整：点击详情页？
+function createMark(idx,odr,type,zn){
+	var lineUp = Tarr[mes.formation]
+
+
+
+
+
+	current.innerHTML = "当前为"+ lineUp[odr].conte +" 另赋提示：xxxx"
 	var li = document.createElement('li');
 	li.className = "mark";
-	li.innerHTML = "<p>现状</p><p>xxxxxxxxxxxxxxxx</p><p>xxxxxx<sapn>xxxx</span>xxxxxx</p>";
+	li.innerHTML = "<h2>关于"+type+"方面</h2><p>当前index值为"+i+"</p><p>xxxxxxxxxxxxxxxx</p><p>xxxxxx<span>xxxx</span>xxxxxx</p><p>啊萨达撒旦发射点发射点发射点法发阿三发射点发生啊手动阀手动阀发射点发生发射点发射点发生发的发的说法发生大阿福</p>";
 	markBox.appendChild(li)
 }
 
 var handle = (function(){
 	var i = 0;
+	var nature = mes.nature
 	return function(e){
 			if(e.target.className == "box"){
 				
@@ -94,8 +113,9 @@ var handle = (function(){
 				var index = e.target.parentNode.parentNode.attributes.order.value
 				if(i == parseInt(index)){
 					var ag = getRoutate(el.style.transform,'Z')
+					var numbers = el.getAttribute('no.')
 					el.style.transform = "rotateZ("+ ag +"deg) rotateY(180deg)"
-					createMark(i)
+					createMark(numbers,i,nature,zn)
 					i++
 					setTimeout(function(){
 						el.removeChild(e.target)

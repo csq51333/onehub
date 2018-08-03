@@ -41,6 +41,7 @@
 			border-radius: 5px;
 			-webkit-background-size: cover;
 			background-size: cover;
+			background-position: center center;
 		}
 		
 	</style>
@@ -120,7 +121,8 @@ function collect(){
 }
 
 function redirect(){
-	window.location = './TarotArray.html?data='+collect()+'&formation=kerte'
+	var mes = getParmas()
+	window.location = './TarotArray.html?data='+collect()+'&formation='+ mes.formation +'&nature='+ mes.nature +'&kind='+ mes.kind
 }
 
 var timer = null;
@@ -134,8 +136,8 @@ start.onmousedown = function(){
 }
 start.onmouseup = function(){
 	clearInterval(timer)
-	if(idx>4){
-		process(idx%4)
+	if(idx>3){
+		process(idx%3)
 		start.style.display = "none"
 	}else{
 		idx = 0;

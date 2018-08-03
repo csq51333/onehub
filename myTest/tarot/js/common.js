@@ -43,8 +43,8 @@ function ZNWei(_ag,s){
 	}
 }
 
-function createPai(father,i,wei,kind){
-	kind = kind || 'waite/'
+function createPai(father,i,wei,kinds){
+	var kind = kinds || 'waite/'
 	var div = document.createElement('div')
 	var divb = document.createElement('div')
 	var divbg = document.createElement('div')

@@ -33,6 +33,7 @@ html,body{
 	-webkit-background-size: contain;
 	background-size: contain;
 	background-repeat: no-repeat;
+	background-position: center center;
 }
 .bei{
 	width: 100%;
@@ -43,6 +44,7 @@ html,body{
 	-webkit-background-size: contain;
 	background-size: contain;
 	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 .clearfix:after{
