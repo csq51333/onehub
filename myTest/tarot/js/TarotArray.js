@@ -1,36 +1,4 @@
 var Tarr = {
-	data:{},
-	init:function(){
-		var obj = getParmas()
-		console.log(obj)
-		this.data = obj
-		this.create()
-	},
-	create:function(){
-		var formation = this.data.formation
-		var kind = this.data.kind
-		var data = this.data.data
-
-
-		for(var i=0;i<data.length;i++){
-			var Arrays = this[formation][i];//当前牌阵
-
-			var box = document.createElement("div");
-			box.className = 'box'
-			box.style.top = Arrays.y + 'px'
-			box.style.left = Arrays.x + 'px'
-			box.style.transform = 'rotate('+ Arrays.ag +'deg)'
-			box.setAttribute('order',i)//牌的位置序号
-
-			createPai(box, data[i].No, data[i].direction, kind) //  生成牌
-
-			var p = document.createElement('p');
-			p.className = 'caption';
-			p.innerHTML = Arrays.conte
-			box.appendChild(p);
-			document.querySelector('.zhen').appendChild(box)
-		}
-	},
 	kerte:{
 		0:{
 			y:200,
@@ -96,4 +64,3 @@ var Tarr = {
 	}
 
 }
-Tarr.init()
