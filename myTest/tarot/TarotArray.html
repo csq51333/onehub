@@ -135,7 +135,7 @@ function createMark(idx,odr,type,zn){
 	current.innerHTML = "当前为"+ lineUp[odr].conte +" 另赋提示：xxxx" //导航提示信息
 	var li = document.createElement('li');
 	li.className = "mark";
-	li.innerHTML = "<h2>"+type+"方面关于"+lineUp[odr].conte+"</h2><p>当前index值为"+odr+"</p>" + truth[idx][type][zn];
+	li.innerHTML = "<h2>"+type+"方面关于"+lineUp[odr].conte+"：</h2></p>" + truth[idx][type][zn];
 	markBox.appendChild(li)
 }
 
