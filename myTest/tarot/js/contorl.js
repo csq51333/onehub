@@ -25,12 +25,12 @@ function coordinate(angle){
 function circle(){
 	for(var i=0;i<len;i++){
 		!function(i){
-			var ag = 360/len*i
+			var ag = 360/len*i;
 			var left = coordinate(ag).x;
-			var top = coordinate(ag).y
+			var top = coordinate(ag).y;
 			pArr[i].style.left = left + redress + 'px';
 			pArr[i].style.top = top + redress + 'px';
-			pArr[i].style.transform = 'rotateZ('+ -ag +'deg)'
+			pArr[i].style.transform = 'rotateZ('+ -ag +'deg)';
 			pArr[i].style.zIndex = i;
 		}(i)
 	}
@@ -86,7 +86,7 @@ function puK(){
 		var ag = angleZ(pArr[i])
 		var zn = ZNWei(ag,'s')
 		// pArr[i].style.transform = 'rotateZ(' + zn + 'deg)'
-		pArr[i].setAttribute('wei',(zn == 180 ? '逆' : '正'))
+		pArr[i].setAttribute('wei',(zn % 360 == 180 ? '逆' : '正'))
 		pArr[i].wei = (zn == 180 ? '逆' : '正')
 	}
 }

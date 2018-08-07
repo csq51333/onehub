@@ -34,13 +34,17 @@ function getRoutate(str,ag){
 
 function ZNWei(_ag,s){
 	if(typeof(_ag) == "number"){
-		_ag %= 360
-		ag = _ag < 0 ? _ag + 360 : _ag;
-		if(s){
-			return ag >= 90 && ag < 270 ? 180 : 0;
-		}
-		return ag >= 0 && ag < 180 ? 90 : 270;
+		var ag = _ag % 360
+		ag < 0 ? ag + 360 : ag;
+		var baseline = s ? (ag >= 90 && ag < 270 ? 180 : 0) : (ag >= 0 && ag < 180 ? 90 : 270);
+		var extra = baseline - ag
+		return _ag + extra
 	}
+}
+
+//随机函数
+function rd(min,max){
+	return Math.round(Math.random()*(max-min)+min)
 }
 
 function createPai(father,i,wei,kinds){

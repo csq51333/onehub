@@ -5,7 +5,9 @@
 	<link rel="stylesheet" href="css/globle.css">
 	<title>牌阵页</title>
 	<style>
-		
+		.pai{
+			opacity: .4;
+		}
 		.hearder{
 			text-align: center;
 			height: 5rem;
@@ -34,25 +36,27 @@
 		}
 		.caption{
 			width: 100%;
-			background-color: cyan;
+			background-color: gray;
 			height: 1.5rem;
 			line-height: 20px;
 			text-align: center;
 			font-size: 1rem;
 			color: white;
+			opacity: .5;
 			position: absolute;
 			bottom: 0;
 		}
 		.remarks{
-			width: 40%;
+			width: 60%;
 			padding: 0.5rem;
-			background-color: blue;
+			background-color: greenyellow;
 			display: none;
 		}
 		.mark{
-			border: 1px solid orange;
+			border: 1px solid gold;
 			border-radius: 5px;
 			margin: 10px;
+			padding: 5px;
 		}
 		.mark>h2{
 			text-align: center;
@@ -135,7 +139,10 @@ function createMark(idx,odr,type,zn){
 	current.innerHTML = "当前为"+ lineUp[odr].conte +" 另赋提示：xxxx" //导航提示信息
 	var li = document.createElement('li');
 	li.className = "mark";
+	var r = rd(0,255), g = rd(0,255), b = rd(0,255);
 	li.innerHTML = "<h2>"+type+"方面关于"+lineUp[odr].conte+"：</h2></p>" + truth[idx][type][zn];
+	li.style.backgroundColor = 'rgb('+ r +','+ g +','+ b +')';
+	document.querySelectorAll('.box')[odr].querySelector('.caption').style.backgroundColor = 'rgb('+ r +','+ g +','+ b +')';
 	markBox.appendChild(li)
 }
 
@@ -150,7 +157,7 @@ var handle = (function(){
 			if(e.target.className == 'bei'){
 				var el = e.target.parentNode
 				var index = e.target.parentNode.parentNode.attributes.order.value // 牌阵序号->按序号翻牌
-				if(i == parseInt(index)){
+				if(i == parseInt(index) && i < 10){
 					var ag = getRoutate(el.style.transform,'Z')
 					var numbers = el.getAttribute('no.')
 					var zn = el.getAttribute('wei') == '正' ? 'z' : 'n';
