@@ -58,14 +58,69 @@ function createPai(father,i,wei,kinds){
 	div.num = i;
 	div.reg = 0;
 	div.setAttribute('No.',i)
-	div.setAttribute('wei',"")
+	if(wei){
+		var dir = wei == 'positive' ? '正' : '逆'
+		div.setAttribute('wei', dir)
+	}
 	div.style.transform = "rotate("+ (wei == 'positive' ? 0 : 180) + "deg)"
 
 	divb.className = 'biao'
 	divb.style.backgroundImage = 'url("img/'+kind+i+'.jpg")'
 
 	divbg.className = 'bei'
+	divbg.style.backgroundImage = 'url("img/'+kind+'b.jpg")'
 	div.appendChild(divb)
 	div.appendChild(divbg)
 	father.appendChild(div)
+}
+
+//弹框
+function mask(obj){
+	var arg = obj || {}
+	var cb = arg.callback
+	var curtain = document.querySelector('.curtain');
+	if(curtain){
+		curtain.style.display = 'block'
+	} else {
+		var curtain = document.createElement('div')
+		var prompt = document.createElement('div')
+		curtain.className = "curtain"
+		prompt.className = "prompt"
+
+		prompt.innerHTML = "<h3>"+ arg.title +"</h3><textarea class='_mark'></textarea><button class='btn'>"+ arg.btn +"</button>"
+
+		curtain.appendChild(prompt)
+		document.body.appendChild(curtain)
+
+		curtain.addEventListener('click',function(e){
+			var e = e || window.e
+			if(e.target.className == 'curtain'){
+				this.style.display = 'none'
+			}
+		},true)
+
+		var btn = document.querySelector('.btn')
+		btn.addEventListener('click',function(){
+			var localMark = document.querySelector('.prompt').querySelector('._mark').value
+			arg.callback(localMark)
+			curtainstyle.display = 'none'
+		})
+	}
+
+}
+
+//转换时间戳格式
+function formatTime(n){
+	if(/\d{13,}/.test(n)){
+		var T = new Date()
+		var Year = T.getFullYear(n)
+		var Month = T.getMonth(n) + 1
+		var Dates = T.getDate(n)
+		var Hours = T.getHours(n)
+		var Minute = T.getMinutes(n)
+		var Second = T.getSeconds(n)
+
+		return Y+"."+Month+"."+Dates+" "+Hours+":"+Minute+":"+Second
+	}
+	return "？？？"
 }

@@ -3,17 +3,18 @@
 <head>
 	<meta charset="UTF-8">
 	<title>首页</title>
+	<link rel="stylesheet" href="css/globle.css">
 	<style>
 		.colls{
 			margin: 20px auto;
 			border: 1px dotted black;
 			border-radius: 10px;
 			padding: 10px;
-			width: 40rem;
+			width: 80%;
 			background-color: gray;
 			list-style: none;
 		}
-		.item{
+		.colls .item{
 			height: 2rem;
 			line-height: 2rem;
 			margin: 10px 0;
@@ -24,7 +25,7 @@
 			border-radius: 5px;
 			color: white;
 		}
-		.go{
+		.colls .go{
 			width: 2.5rem;
 			height: 2.5rem;
 			line-height: 2rem;
@@ -33,6 +34,43 @@
 			color: white;
 			margin: 0 auto;
 			text-align: center;
+		}
+		.recordBox{
+			width: 100%;
+		}
+		.recordTitle{
+			background-color: gray;
+			color-rendering: red;
+			text-align: center;
+			margin: 10px auto;
+			width: 40%;
+		}
+		.hist{
+			width: 80%;
+			max-height:30rem;
+			overflow-y:auto;
+			margin: 0 auto;
+			padding: 10px;
+			border-radius: 5px;
+			background-color: gray;
+			color: white;
+		}
+		.hist>li{
+			background-color: black;
+			height: 2rem;
+			line-height: 2rem;
+			border-radius: 5px;
+			padding: 0 1rem;
+			margin: 10px 0;
+		}
+		.problem{
+			float: left;
+			width: 55%;
+		}
+		.recordDate{
+			width: 35%;
+			float: right;
+			text-align: right;
 		}
 	</style>
 </head>
@@ -59,33 +97,79 @@
 		<li class="item">
 			<label for="">选阵：</label>
 			<select class="zhen" id="">
-				<option value="kerte">凯尔特十字</option>
-				<option value="sanj">圣三角</option>
-				<option value="suol">所罗门</option>
 			</select>
 		</li>
 		<li class="item">
 			<label for="">选数：</label>
 			<select class="num" id="">
-				<option value="78">78张全部</option>
 				<option value="22">22张大阿卡纳</option>
+				<option value="78">78张全部</option>
 				<option value="56">56张小阿卡纳</option>
+			</select>
+		</li>
+		<li class="item">
+			<label for="">占卜对象：</label>
+			<select class="isSelf" id="">
+				<option value="90">自己</option>
+				<option value="-90">他人</option>
 			</select>
 		</li>
 		<div class="go">go</div>
 	</ul>
+
+	<div class="recordBox">
+		<div class="recordTitle">
+			<h3>歷史記錄</h3>
+		</div>
+		<ul class="hist">
+			
+		</ul>
+	</div>
 </body>
+<script src="js/TarotArray.js"></script>
 <script>
 var go = document.querySelector('.go')
 var ki = document.querySelector('.kind')
 var ce = document.querySelector('.ce')
 var zh = document.querySelector('.zhen')
 var nu = document.querySelector('.num')
+var se = document.querySelector('.isSelf')
+var hist = document.querySelector('.hist')
+var colls = document.querySelector('.colls')
 
+var TarrNo = 0;
+for(x in Tarr){
+	TarrNo++;
+	var html = '<option value="'+x+'">'+x+'</option>'
+	zh.innerHTML += html
+}
+
+for(i in localStorage){
+	if(/Tarot/.test(i)){
+		var obj = JSON.parse(localStorage[i])
+		console.log(obj)
+		hist.innerHTML += '<li class="clearfix"><a href="TarotArray.html?'+ obj.record +'"><p class="problem ellipsis">'+ obj.remark +'</p><p class="recordDate ellipsis">'+formatTime(obj.date)+'</p></a></li>';
+	}
+}
 go.onclick = function(){
-	var str = "?nature="+ce.value+"&formation="+zh.value+"&total="+nu.value+"&kind=" + ki.value
-	console.log(str)
+	var str = "?nature="+ce.value+"&formation="+zh.value+"&total="+nu.value+"&kind=" + ki.value + "&self=" + se.value
 	window.location = './tarot.html'+str
 }
+
+function formatTime(n){
+	if(/\d{13,}/.test(n)){
+		var T = new Date()
+		var Year = T.getFullYear(n)
+		var Month = T.getMonth(n) + 1
+		var Dates = T.getDate(n)
+		var Hours = T.getHours(n)
+		var Minute = T.getMinutes(n)
+		var Second = T.getSeconds(n)
+
+		return Year+"."+Month+"."+Dates+" "+Hours+":"+Minute+":"+Second+" "
+	}
+	return "？？？"
+}
+
 </script>
 </html>

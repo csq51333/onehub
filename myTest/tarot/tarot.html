@@ -7,8 +7,8 @@
 	<style>
 		#origin{
 			position: relative;
-			width: 10px;
-			height: 10px;
+			width: 0px;
+			height: 0px;
 			border-radius: 10px;
 			background-color: black;
 			/*margin: 200px auto;*/
@@ -57,17 +57,18 @@
 <script src="js/common.js"></script>
 <script src="js/main.js"></script>
 <script src="js/contorl.js"></script>
+<script src="js/TarotArray.js"></script>
 <script>
 var ogn = document.getElementById('origin')
 var clt = document.getElementById('collect')
 var start = document.querySelector('.start')
-var items;
+var items,lens;
 
 var mes = getParmas() // 第一页选项信息
 
 //生成收集栏
 function createClt(){
-	var lens = 10 // 本页面中的10为，收集页传入的牌阵
+	lens = Tarr[mes.formation].total // 本页面中的10为，收集页传入的牌阵
 	for(var i=0;i<lens;i++){
 		var div = document.createElement('div')
 		div.className = 'clt-item'
@@ -88,7 +89,7 @@ var handle = (function(){
 	var i = 0;
 	return function(e){
 		var el,et = e.target;
-		if((et.className == 'bei' || et.className == 'biao') && i < 10){
+		if((et.className == 'bei' || et.className == 'biao') && i < lens){
 			el = et.parentNode
 			if(el.getAttribute('wei')){ // wei是否含值可确定洗没洗过牌
 				var v = el.getAttribute('wei') //正逆位
@@ -104,7 +105,7 @@ var handle = (function(){
 				items[i].numbers = n;
 				el.style.display = 'none';
 				i++;
-				if(i == 10){
+				if(i == lens){
 					document.removeEventListener('click',handle)
 					redirect()
 				}
@@ -126,7 +127,7 @@ function collect(){
 }
 
 function redirect(){
-	window.location = './TarotArray.html?data='+collect()+'&formation='+ mes.formation +'&nature='+ mes.nature +'&kind='+ mes.kind
+	window.location = './TarotArray.html?data='+collect()+'&formation='+ mes.formation +'&nature='+ mes.nature +'&kind='+ mes.kind +'&Date='+ new Date().getTime() +'&query=' + '输入你的问题'
 }
 
 var timer = null;
@@ -141,7 +142,7 @@ start.onmousedown = function(){
 start.onmouseup = function(){
 	clearInterval(timer)
 	if(idx>2){
-		process(idx%2)
+		process(idx%2, mes.self)
 		start.style.display = "none"
 	}else{
 		idx = 0;

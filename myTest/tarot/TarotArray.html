@@ -5,9 +5,6 @@
 	<link rel="stylesheet" href="css/globle.css">
 	<title>牌阵页</title>
 	<style>
-		.pai{
-			opacity: .4;
-		}
 		.hearder{
 			text-align: center;
 			height: 5rem;
@@ -16,6 +13,8 @@
 			margin-bottom: 20px
 		}
 		.hearder:hover .remarks{
+			position: absolute;
+			z-index: 1000;
 			display: block;
 		}
 		.current{
@@ -42,7 +41,6 @@
 			text-align: center;
 			font-size: 1rem;
 			color: white;
-			opacity: .5;
 			position: absolute;
 			bottom: 0;
 		}
@@ -68,6 +66,24 @@
 			/*white-space: wrap*/
 		}
 		.mark>p>span{color: red}
+		.save{
+			width: 4rem;
+			height: 3rem;
+			line-height: 3rem;
+			background-color: black;
+			position: fixed;
+			text-align: center;
+			border-radius: .2rem;
+			border: 1px solid gray;
+			color: white;
+			right: 0;
+			top: 45%;
+			font-size: .5rem;
+			transition: .5s;
+		}
+		.save:hover{
+			width: 6rem;
+		}
 	</style>
 </head>
 <body>
@@ -78,6 +94,8 @@
 		</div>
 		<div class="zhen"></div>
 	</div>
+
+	<div class="save">保存记录</div>
 </body>
 <script src="js/truth.js"></script>
 <script src="js/common.js"></script>
@@ -87,6 +105,7 @@ var zhen = document.querySelector('.zhen')
 var cap = document.querySelectorAll('.caption')
 var current = document.querySelector('.current')
 var markBox = document.querySelector('.remarks')
+var save = document.querySelector('.save')
 var mes = getParmas() // 信息
 
 var login = {
@@ -132,15 +151,14 @@ function createMark(idx,odr,type,zn){
 	// odr : 牌阵位号
 	// type : 测试类型：健康/工作
 	// zn ：牌的正逆位
-	// 
+
 	var lineUp = Tarr[mes.formation] // 牌阵对象
 
-
-	current.innerHTML = "当前为"+ lineUp[odr].conte +" 另赋提示：xxxx" //导航提示信息
+	current.innerHTML = "当前阵位："+ lineUp[odr].conte //导航提示信息
 	var li = document.createElement('li');
 	li.className = "mark";
-	var r = rd(0,255), g = rd(0,255), b = rd(0,255);
-	li.innerHTML = "<h2>"+type+"方面关于"+lineUp[odr].conte+"：</h2></p>" + truth[idx][type][zn];
+	var r = rd(0,200), g = rd(0,180), b = rd(0,200);
+	li.innerHTML = "<h2>"+compare[type]+"方面，关于"+lineUp[odr].conte+"：</h2></p>" + truth[idx][type][zn];
 	li.style.backgroundColor = 'rgb('+ r +','+ g +','+ b +')';
 	document.querySelectorAll('.box')[odr].querySelector('.caption').style.backgroundColor = 'rgb('+ r +','+ g +','+ b +')';
 	markBox.appendChild(li)
@@ -176,5 +194,42 @@ var handle = (function(){
 })()
 
 zhen.addEventListener('click',handle)
+
+//保存记录按钮
+if(!isSave(mes.Date)){
+	save.style.display = 'none'
+}
+save.onclick = function(){
+	var _key = mes.Date
+	if(isSave(_key)){
+		mask({
+			title:"情在下方输入测试内容",
+			btn:"确认保存",
+			callback:function(_mark){
+				//可分为按时间查询new Date("2018.2.12 00:01").getTime()与按问题查询/??/.test(??)
+				var _value = window.location.search.substr(1)
+				var _saveBody = {
+					remark:_mark,
+					record:_value,
+					date:mes.Date
+				}
+				localStorage.setItem('Tarot'+_key, JSON.stringify(_saveBody))
+			}
+		})
+	} else {
+		alert('查询到已有ID，请勿重复保存')
+	}
+	this.style.display = 'none'
+
+}
+function isSave(checks){
+	var _check = 'Tarot'+checks;
+	for(x in localStorage){
+		if(_check == x){
+			return false
+		}
+	}
+	return true
+}
 </script>
 </html>

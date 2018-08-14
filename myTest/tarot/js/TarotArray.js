@@ -60,7 +60,17 @@ var Tarr = {
 			ag:30,
 			conte: "结果"
 		},
-		type: "全性质"
+		type: "全性质",
+		total: 10
 	}
 
+}
+
+var compare = {
+	outline:"综合运势",
+	health:"健康生活",
+	wealth:"人际财富",
+	work:"工作学业",
+	love:"恋爱婚姻",
+	other:"其他"
 }

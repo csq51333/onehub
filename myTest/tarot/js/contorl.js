@@ -4,6 +4,7 @@ var redress = cw > ch ? ch/3 : cw/2 //矫正值，为了居中
 
 var pArr = document.querySelectorAll('.pai');
 var len = pArr.length;
+var isSelfAg = 0; 
 
 //随机函数
 function rd(min,max){
@@ -167,8 +168,9 @@ function Sqie(){
 }
 
 // 自动洗牌一套动作集合，传参洗几遍，默认3次
-var process = function(n){
+var process = function(n, _ag){
 	var lens = n || 3
+	isSelfAg = parseInt(_ag) || 0;
 	// document.getElementById('origin').style.animation = "circle "+i+"s linear"
 	for(var i=0;i<lens;i++){
 		setTimeout(function(){
@@ -183,11 +185,11 @@ var process = function(n){
 	},++i*1000)
 }
 
-function next(){
-	console.log('show self or other?')
+function next(ag){
+	console.log(ag);
 	for(var i=0;i<len;i++){
 		var _redress = getRoutate(pArr[i].style.transform,'Z');
-		var _ag = (90 + _redress) // 为自己占卜加90度 ，为他人占卜减90度,90从首页信息选择来还是按钮选择？
+		var _ag = isSelfAg + _redress // 为自己占卜加90度 ，为他人占卜减90度,90从首页信息选择来还是按钮选择？
 		pArr[i].style.transform = 'rotateZ(' + _ag + 'deg)'
 	}
 
